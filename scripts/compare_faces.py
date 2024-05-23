@@ -17,7 +17,7 @@ def compare_faces(image_path1, image_path2):
     
     # Compare the faces found in the first image to the faces found in the second image
     for face_encoding1 in face_encodings1:
-        matches = face_recognition.compare_faces(face_encodings2, face_encoding1)
+        matches = face_recognition.compare_faces(face_encodings2, face_encoding1, tolerance=0.6)
         if True in matches:
             return True
     

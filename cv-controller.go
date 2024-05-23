@@ -6,6 +6,7 @@ import (
 	"time"
 	"strings"
 	"os/exec"
+	"os"
 
 	"gocv.io/x/gocv"
 )
@@ -128,3 +129,17 @@ func AreFacesEqual(imagePath1, imagePath2 string) (bool, error) {
 
 }
 
+func DeleteFile(filePath string) error {
+
+	// Tenta deletar o arquivo
+	err := os.Remove(filePath)
+
+	if err != nil {
+		fmt.Printf("Error deleting file: %v\n", err)
+		return err
+	}
+
+	fmt.Println("File deleted successfully")
+	return nil
+
+}

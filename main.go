@@ -4,7 +4,7 @@ import("fmt")
 
 func main() {
 	
-	imagepath1 := "imgs/face_detected_20240523-130527.png"
+	imagepath1 := "imgs/face_detected_20240523-155643.png"
 	imagepath2, err := DetectAndSaveFace()
 
 	if err != nil {
@@ -18,18 +18,20 @@ func main() {
 	if err != nil {
 
 		fmt.Printf("erro inesperado")
+		return
 
 	}
 
 
 	if facesIguais {
 
-		fmt.Printf("igual")
+		fmt.Printf("\nigual\nnao vai ser salvo")
+		DeleteFile(imagepath2)
 		return
 
 	}
 
-	fmt.Printf("diferente")
+	fmt.Printf("\ndiferente\nsalvo!\n")
 
 }
 
