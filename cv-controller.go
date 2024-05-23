@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"image/color"
 	"time"
+	"strings"
+	"os/exec"
 
 	"gocv.io/x/gocv"
 )
 
-func DetectFaces() {
+func DetectAndSaveFace() (string, error) {
 	// set to use a video capture device 0
 	deviceID := 0
 
@@ -16,7 +18,7 @@ func DetectFaces() {
 	webcam, err := gocv.OpenVideoCapture(deviceID)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return "", err
 	}
 	defer webcam.Close()
 
@@ -37,16 +39,20 @@ func DetectFaces() {
 
 	// path para haar cascade da biblioteca
 	if !classifier.Load("/home/gabriel/src-go/gocv/data/haarcascade_frontalface_default.xml") { 
-		fmt.Println("Error reading cascade file: data/haarcascade_frontalface_default.xml")
-		return
+		err := "error reading cascade file: data/haarcascade_frontalface_default.xml"
+		fmt.Println(err)
+		return "", fmt.Errorf(err)
 	}
 
 	fmt.Printf("start reading camera device: %v\n", deviceID)
 
+	filename := ""
+
 	for {
 		if ok := webcam.Read(&img); !ok {
-			fmt.Printf("cannot read device %v\n", deviceID)
-			return
+			err := fmt.Sprintf("cannot read device %v\n", deviceID)
+			fmt.Println(err)
+			return "", fmt.Errorf(err)
 		}
 		if img.Empty() {
 			continue
@@ -69,19 +75,27 @@ func DetectFaces() {
 		if len(rects) == 1 {
 			
 			fmt.Println("Press 's' to save the image")
-			SaveImage(img, key)
-			
+			filename = SaveImage(img, key)
 		}
+
+		if filename != "" {
+
+			return filename, nil
+
+		}
+
 	}
 }
 
 // caso aperte S ou s, a imagem é salva 
-func SaveImage(img gocv.Mat, key int) {
+func SaveImage(img gocv.Mat, key int) string {
+
+	filename := ""
 
 	if key == 'S' || key == 's' {
 
 		timestamp := time.Now().Format("20060102-150405")
-		filename := fmt.Sprintf("imgs/face_detected_%s.png", timestamp)
+		filename = fmt.Sprintf("imgs/face_detected_%s.png", timestamp)
 		
 		if ok := gocv.IMWrite(filename, img); ok {
 			fmt.Printf("Image saved to %s\n", filename)
@@ -90,6 +104,27 @@ func SaveImage(img gocv.Mat, key int) {
 		}
 		
 	}
+
+	return filename
+
+}
+
+// CompareFaces executa um script Python para comparar faces em duas imagens e retorna um valor booleano.
+func AreFacesEqual(imagePath1, imagePath2 string) (bool, error) {
+	// Comando para executar o script Python com os caminhos das imagens como argumentos
+	cmd := exec.Command("python3", "scripts/compare_faces.py", imagePath1, imagePath2)
+
+	// Executa o comando e captura a saída
+	output, err := cmd.Output()
+	if err != nil {
+		return false, fmt.Errorf("error executing python script: %v", err)
+	}
+
+	// Converte a saída para uma string e remove espaços em branco extras
+	result := strings.TrimSpace(string(output))
+
+	// Verifica a saída e retorna true ou false conforme apropriado
+	return result == "true", nil
 
 }
 
