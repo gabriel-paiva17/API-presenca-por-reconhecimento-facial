@@ -1,10 +1,11 @@
 package main
 
-import("fmt")
+import("fmt"
+		)
 
 func main() {
 	
-	imagepath1 := "imgs/face_detected_20240523-155643.png"
+	imagepath1 := "imgs/face_detected_20240523-160423.png"
 	imagepath2, err := DetectAndSaveFace()
 
 	if err != nil {

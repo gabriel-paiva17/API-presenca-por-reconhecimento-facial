@@ -39,7 +39,7 @@ func DetectAndSaveFace() (string, error) {
 	defer classifier.Close()
 
 	// path para haar cascade da biblioteca
-	if !classifier.Load("/home/gabriel/src-go/gocv/data/haarcascade_frontalface_default.xml") { 
+	if !classifier.Load("./static/haarcascade_frontalface_default.xml") { 
 		err := "error reading cascade file: data/haarcascade_frontalface_default.xml"
 		fmt.Println(err)
 		return "", fmt.Errorf(err)
@@ -113,7 +113,7 @@ func SaveImage(img gocv.Mat, key int) string {
 // CompareFaces executa um script Python para comparar faces em duas imagens e retorna um valor booleano.
 func AreFacesEqual(imagePath1, imagePath2 string) (bool, error) {
 	// Comando para executar o script Python com os caminhos das imagens como argumentos
-	cmd := exec.Command("python3", "scripts/compare_faces.py", imagePath1, imagePath2)
+	cmd := exec.Command("python3", "compare_faces.py", imagePath1, imagePath2)
 
 	// Executa o comando e captura a saída
 	output, err := cmd.Output()
