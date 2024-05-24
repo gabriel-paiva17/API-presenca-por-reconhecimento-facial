@@ -5,7 +5,7 @@ import("fmt"
 
 func main() {
 	
-	imagepath1 := "imgs/face_detected_20240523-160423.png"
+	imagepath1 := "imgs/face_detected_20240524-171112.png"
 	imagepath2, err := DetectAndSaveFace()
 
 	if err != nil {
