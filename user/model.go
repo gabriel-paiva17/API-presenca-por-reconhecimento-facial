@@ -8,7 +8,7 @@ type User struct {
 	RegisteredAt string `json:"registeredAt"`
 }
 
-type CreateUserBody struct {
+type CreateUserRequest struct {
 
 	ID       	 string `json:"id"`
     Username 	 string `json:"username"`

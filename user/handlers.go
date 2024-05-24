@@ -11,21 +11,21 @@ import (
 )
 
 func (u *User) CreateUser(res http.ResponseWriter, req *http.Request) {
-    // Decodificar o JSON da requisição para a estrutura CreateUserBody
-    var createUserBody CreateUserBody
-    if err := json.NewDecoder(req.Body).Decode(&createUserBody); err != nil {
+    // Decodificar o JSON da requisição para a estrutura createUserRequest
+    var createUserRequest CreateUserRequest
+    if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {
         http.Error(res, "Invalid request body", http.StatusBadRequest)
         return
     }
 
     // Validar o e-mail
-    if !utils.IsValidEmail(createUserBody.Email) {
+    if !utils.IsValidEmail(createUserRequest.Email) {
         http.Error(res, "Invalid email format", http.StatusBadRequest)
         return
     }
 
     // Hash da senha (suponha que você tenha uma função HashPassword em utils)
-    hashedPassword, err := utils.HashPassword(createUserBody.Password)
+    hashedPassword, err := utils.HashPassword(createUserRequest.Password)
     if err != nil {
         http.Error(res, "Error hashing password", http.StatusInternalServerError)
         return
@@ -37,8 +37,8 @@ func (u *User) CreateUser(res http.ResponseWriter, req *http.Request) {
     // Criar a instância do usuário com os dados fornecidos na requisição
     newUser := User{
         ID:          userID,
-        Username:    createUserBody.Username,
-        Email:       createUserBody.Email,
+        Username:    createUserRequest.Username,
+        Email:       createUserRequest.Email,
         Password:    hashedPassword,
         RegisteredAt: time.Now().Format(time.RFC3339), // Timestamp atual
     }
