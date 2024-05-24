@@ -5,7 +5,8 @@ import (
     "time"
     "encoding/json"
     "github.com/google/uuid" // Para gerar IDs únicos
-    "main/utils"     // Importe o pacote de utilitários para hash de senha e validação de e-mail
+    
+    "myproject/utils"     // Importe o pacote de utilitários para hash de senha e validação de e-mail
 
 )
 
