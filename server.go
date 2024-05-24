@@ -14,12 +14,12 @@ func (h MainHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	
 	if !isMethodAndPathValid(req) {
 	
-		res.Write([]byte(""))
+		res.Write([]byte("erro"))
 		return
 
 	}
 	
-	//RequestController[req.Method][req.URL.Path](res, req)
+	RequestController[req.Method][req.URL.Path](res, req)
 	
 }
 
@@ -39,8 +39,7 @@ func CreateServer() {
 
 func isMethodAndPathValid(req *http.Request)bool {
 
-	//return RequestController[req.Method][req.URL.Path] != nil
-	return true
+	return RequestController[req.Method][req.URL.Path] != nil
 
 }
 
