@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 	"fmt"
-	//"myproject/user"
+	"myproject/user"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,10 +29,14 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	
+	userRepo := user.NewMongoUserRepository(client, "web-presenca", "users")
+	userService := user.NewUserService(userRepo)
+	userController := user.NewUserController(userService)
+
+	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 
 	s := &http.Server{
-		Addr:         "192.168.0.9:8080",
+		Addr:         "localhost:8080",
 		Handler:      r,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
