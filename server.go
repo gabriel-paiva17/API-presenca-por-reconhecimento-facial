@@ -16,20 +16,20 @@ import (
 
 func CreateServer() {
 
-	// Conecta-se ao MongoDB
-	client, cancel, err := connectDB("mongodb://localhost:27017")
+	client, ctx, cancel, err := connectDB("mongodb://localhost:27017")
 	if err != nil {
-		log.Fatal("Erro ao conectar ao MongoDB:", err)
+		log.Fatal("Failed to connect to MongoDB:", err)
 	}
 	defer func() {
-		
-		if err = client.Disconnect(context.Background()); err != nil {
-			log.Fatal("Erro ao desconectar do MongoDB:", err)
+		if err = client.Disconnect(ctx); err != nil {
+			log.Fatal("Failed to disconnect from MongoDB:", err)
 		}
-		cancel() // Cancela o contexto para liberar recursos
+		cancel()
 	}()
 
 	r := mux.NewRouter()
+
+	
 
 	s := &http.Server{
 		Addr:         "192.168.0.9:8080",
@@ -43,7 +43,7 @@ func CreateServer() {
 }
 
 
-func connectDB(uri string) (*mongo.Client, context.CancelFunc, error) {
+func connectDB(uri string) (*mongo.Client, context.Context, context.CancelFunc, error) {
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
@@ -52,16 +52,15 @@ func connectDB(uri string) (*mongo.Client, context.CancelFunc, error) {
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		cancel()
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
-
-	// Verifica se a conexão foi estabelecida com sucesso
+	
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
 		cancel()
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	fmt.Println("Conectado ao MongoDB!")
-	return client, cancel, nil
+	return client, ctx, cancel, nil
 }
