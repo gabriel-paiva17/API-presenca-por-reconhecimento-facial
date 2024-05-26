@@ -29,7 +29,7 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	userRepo := user.NewMongoUserRepository(client, "web-presenca", "users")
+	userRepo := user.NewMongoUserRepository(client, "web_presenca", "users")
 	userService := user.NewUserService(userRepo)
 	userController := user.NewUserController(userService)
 
@@ -49,7 +49,7 @@ func CreateServer() {
 
 func connectDB(uri string) (*mongo.Client, context.Context, context.CancelFunc, error) {
 	
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 
 	clientOptions := options.Client().ApplyURI(uri)
 
