@@ -18,7 +18,6 @@ func NewUserController(service *UserService) *UserController {
 func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Request) {
 	
 	// TODO: implementar mensagens de erro documentadas no projeto
-	// ou entao alterar documentacao
 	
 	var createUserRequest CreateUserRequest
 	if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {

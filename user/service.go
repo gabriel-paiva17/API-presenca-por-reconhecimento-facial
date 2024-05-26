@@ -23,6 +23,8 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 	
 	// TODO: implementar uma verificacao de que esse email ainda nao foi utilizado 
 	// para cadastrar nenhum usuario
+	
+	// alem disso ver se existe alguma forma de so aceitar email existentes
 
 	if !utils.IsValidEmail(req.Email) {
 
