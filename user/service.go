@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"fmt"
 	"myproject/utils"
 	"time"
 
@@ -21,12 +20,6 @@ func NewUserService(repo UserRepository) *UserService {
 
 func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
 	
-	if !utils.IsValidEmail(req.Email) {
-
-		return nil, fmt.Errorf("invalid email.")
-
-	}
-
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		return nil, err

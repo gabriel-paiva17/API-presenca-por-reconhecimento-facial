@@ -18,11 +18,14 @@ func NewUserController(service *UserService) *UserController {
 
 func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Request) {
 	
-	// TODO: implementar mensagens de erro documentadas no projeto
-	
 	var createUserRequest CreateUserRequest
 	if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {
 		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
+		return
+	}
+
+	if !utils.IsValidEmail(createUserRequest.Email) {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Email invalido.")
 		return
 	}
 
@@ -41,4 +44,5 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 		"message": "Usuário criado com sucesso.",
 		"user":    createUserResponse,
 	})
+
 }
