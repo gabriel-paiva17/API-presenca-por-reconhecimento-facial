@@ -1,8 +1,8 @@
 package utils
 
 import (
-    "net/http"
-    "encoding/json"
+	"encoding/json"
+	"net/http"
 )
 
 type ErrorResponse struct {
@@ -14,6 +14,7 @@ var errorMap = map[int]string{
     http.StatusBadRequest:          "Bad Request",
     http.StatusUnauthorized:        "Unauthorized",
     http.StatusNotFound:            "Not Found",
+	http.StatusConflict:			"Conflict",
     http.StatusInternalServerError: "Internal Server Error",
 }
 

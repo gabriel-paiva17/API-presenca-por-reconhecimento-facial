@@ -2,8 +2,9 @@ package user
 
 import (
 	"encoding/json"
-	"net/http"
+	"errors"
 	"myproject/utils"
+	"net/http"
 )
 
 type UserController struct {
@@ -32,8 +33,15 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	ctx := req.Context()
 
 	createUserResponse, err := c.service.CreateUser(ctx, &createUserRequest)
+	
+	if errors.Is(err, ErrEmailAlreadyExists) {
+
+		utils.WriteErrorResponse(res, http.StatusConflict, "Email ja utilizado anteriormente.")
+
+	}
+
 	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
 		return
 	}
 
