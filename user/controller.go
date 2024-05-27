@@ -37,6 +37,7 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	if errors.Is(err, ErrEmailAlreadyExists) {
 
 		utils.WriteErrorResponse(res, http.StatusConflict, "Email ja utilizado anteriormente.")
+		return
 
 	}
 

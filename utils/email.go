@@ -31,6 +31,13 @@ func IsValidEmail(email string) bool {
     return CheckMXRecords(domain)
 }
 
+// nao verifica se é um email real, 
+// somente se o formato e valido, 
+// e o dominio tambem
+
+// talvez alterar isso no futuro
+
+
 // considerar envio de email de verificacao
 // ex inicial: 
 
