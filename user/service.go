@@ -21,11 +21,6 @@ func NewUserService(repo UserRepository) *UserService {
 
 func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
 	
-	// TODO: implementar uma verificacao de que esse email ainda nao foi utilizado 
-	// para cadastrar nenhum usuario
-	
-	// alem disso ver se existe alguma forma de so aceitar email existentes
-
 	if !utils.IsValidEmail(req.Email) {
 
 		return nil, fmt.Errorf("invalid email")
