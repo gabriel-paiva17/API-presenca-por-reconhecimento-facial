@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 	"fmt"
-	"myproject/user"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"myproject/user"
 )
 
 func CreateServer() {

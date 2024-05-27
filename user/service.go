@@ -23,7 +23,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 	
 	if !utils.IsValidEmail(req.Email) {
 
-		return nil, fmt.Errorf("invalid email")
+		return nil, fmt.Errorf("invalid email.")
 
 	}
 

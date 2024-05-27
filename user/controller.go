@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"net/http"
+	"myproject/utils"
 )
 
 type UserController struct {
@@ -21,7 +22,7 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	
 	var createUserRequest CreateUserRequest
 	if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {
-		http.Error(res, "Invalid request body", http.StatusBadRequest)
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
 		return
 	}
 
