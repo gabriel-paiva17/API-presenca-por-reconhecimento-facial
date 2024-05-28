@@ -23,21 +23,43 @@ func NewMongoUserRepository(client *mongo.Client, dbName string, collectionName 
 	}
 }
 
-var ErrEmailAlreadyExists = errors.New("email already used")
- 
-func (r *MongoUserRepository) CreateUser(ctx context.Context, user *User) error {
-	
-	filter := bson.M{"email": user.Email}
-    existingUser := &User{}
+func (r *MongoUserRepository) FindOneByEmail (ctx context.Context, email string) (*User, bool) {
 
-    err := r.collection.FindOne(ctx, filter).Decode(existingUser)
-    
+	filter := bson.M{"email": email}
+    existingUser := &User{}
+	
 	// caso nao tenha erro, significa que a busca funcionou e existe
 	// um user cadastrado com esse email
-	if err == nil { 
+    err := r.collection.FindOne(ctx, filter).Decode(existingUser)
+
+	if err != nil {
+
+		return nil, false 
+
+	}
+
+	return existingUser, true
+
+}
+
+var ErrEmailAlreadyExists = errors.New("email already used")
+ 
+
+/////////////////////////
+// POST /auth/register //
+/////////////////////////
+
+
+func (r *MongoUserRepository) CreateUser(ctx context.Context, user *User) error {
+	
+	_, exists :=  r.FindOneByEmail(ctx, user.Email)
+	
+	if exists { 
         return ErrEmailAlreadyExists
     }
 
-    _, err = r.collection.InsertOne(ctx, user)
-    return err
+    _, err := r.collection.InsertOne(ctx, user)
+    
+	return err
+
 }

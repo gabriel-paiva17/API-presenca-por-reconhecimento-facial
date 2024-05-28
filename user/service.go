@@ -17,6 +17,10 @@ func NewUserService(repo UserRepository) *UserService {
 	}
 }
 
+/////////////////////////
+// POST /auth/register //
+/////////////////////////
+
 func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
 	
 	newUser := &User{
@@ -41,3 +45,9 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 
 	return response, nil
 }
+
+//////////////////////
+// POST /auth/login //
+//////////////////////
+
+// func (s *UserService) Create 

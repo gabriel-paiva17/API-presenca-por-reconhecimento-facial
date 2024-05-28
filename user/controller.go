@@ -17,6 +17,10 @@ func NewUserController(service *UserService) *UserController {
 	}
 }
 
+/////////////////////////
+// POST /auth/register //
+/////////////////////////
+
 func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Request) {
 	
 	var createUserRequest CreateUserRequest
@@ -63,3 +67,7 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	})
 
 }
+
+//////////////////////
+// POST /auth/login //
+//////////////////////
