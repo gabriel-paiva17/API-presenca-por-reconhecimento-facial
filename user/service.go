@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"myproject/utils"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,16 +19,11 @@ func NewUserService(repo UserRepository) *UserService {
 
 func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
 	
-	hashedPassword, err := utils.HashPassword(req.Password)
-	if err != nil {
-		return nil, err
-	}
-
 	newUser := &User{
 		ID: 		  uuid.New().String(),
 		Username:     req.Username,
 		Email:        req.Email,
-		Password:     hashedPassword,
+		Password:     req.Password,
 		RegisteredAt: time.Now().Format(time.RFC3339),
 	}
 

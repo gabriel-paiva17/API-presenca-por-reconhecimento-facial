@@ -30,6 +30,14 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 		return
 	}
 
+	hashedPassword, err := utils.HashPassword(createUserRequest.Password)
+	if err != nil {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Senha invalida.")
+		return
+	}
+
+	createUserRequest.Password = hashedPassword
+
 	ctx := req.Context()
 
 	createUserResponse, err := c.service.CreateUser(ctx, &createUserRequest)
