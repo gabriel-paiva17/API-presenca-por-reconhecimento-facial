@@ -36,11 +36,7 @@ func CreateServer() {
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 
-	cors := handlers.CORS(
-        handlers.AllowedOrigins([]string{"http://localhost:5173"}),
-        handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-        handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-    )
+	cors := configureCORS()
 
     s := &http.Server{
         Addr:         "localhost:8080",
@@ -74,4 +70,12 @@ func connectDB(uri string) (*mongo.Client, context.Context, context.CancelFunc, 
 
 	fmt.Println("Conectado ao MongoDB!")
 	return client, ctx, cancel, nil
+}
+
+func configureCORS() func(http.Handler) http.Handler {
+    return handlers.CORS(
+        handlers.AllowedOrigins([]string{"http://localhost:5173"}),
+        handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+        handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+    )
 }
