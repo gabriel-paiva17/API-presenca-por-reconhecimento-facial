@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -35,12 +36,18 @@ func CreateServer() {
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 
-	s := &http.Server{
-		Addr:         "localhost:8080",
-		Handler:      r,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
+	cors := handlers.CORS(
+        handlers.AllowedOrigins([]string{"http://localhost:5173"}),
+        handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+        handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+    )
+
+    s := &http.Server{
+        Addr:         "localhost:8080",
+        Handler:      cors(r),
+        ReadTimeout:  10 * time.Second,
+        WriteTimeout: 10 * time.Second,
+    }
 	
 	log.Fatal(s.ListenAndServe())
 
