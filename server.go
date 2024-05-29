@@ -35,6 +35,7 @@ func CreateServer() {
 	userController := user.NewUserController(userService)
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
+	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
 
 	cors := configureCORS()
 

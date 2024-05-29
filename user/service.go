@@ -55,17 +55,17 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 // POST /auth/login //
 //////////////////////
 
-func (s *UserService) LoginUser (ctx context.Context, req *LoginRequest) (string, error) {
+func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest) (string, error) {
 
 	dbUser, found := s.repo.FindOneByEmail(ctx, req.Email)
 
 	if !found {
-        return "", utils.ErrNotFound
+        return "", fmt.Errorf("usuario nao existe")
     }
 
 	if !utils.IsHashEqualPassword(dbUser.Password, req.Password) {
 
-		return "", fmt.Errorf("invalid credentials")
+		return "", fmt.Errorf("senha invalida")
 
 
 	}
@@ -80,7 +80,7 @@ func (s *UserService) LoginUser (ctx context.Context, req *LoginRequest) (string
 	// adicionando chave secreta a assinatura
     tokenString, err := token.SignedString(s.jwtKey)
     if err != nil {
-        return "", err
+        return "", ErrGeneratingToken
     }
 
 	return tokenString, nil

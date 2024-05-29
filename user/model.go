@@ -51,3 +51,4 @@ type LoginResponse struct {
 //////////////////////
 
 var ErrEmailAlreadyExists = errors.New("email already used")
+var ErrGeneratingToken = errors.New("cannot generate token")

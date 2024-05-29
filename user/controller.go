@@ -71,3 +71,32 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 //////////////////////
 // POST /auth/login //
 //////////////////////
+
+func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Request) {
+
+	var loginReq LoginRequest
+    if err := json.NewDecoder(req.Body).Decode(&loginReq); err != nil {
+        utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
+        return
+    }
+
+    token, err := c.service.LoginUser(req.Context(), &loginReq)
+    
+	if err == ErrGeneratingToken {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+		
+	}
+	
+	if err != nil {
+		utils.WriteErrorResponse(res, http.StatusUnauthorized, err.Error())
+        return
+    }
+
+    response := LoginResponse{Token: token}
+    res.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(res).Encode(response)
+
+
+}
