@@ -4,4 +4,4 @@ TODO:
 - Implementar Controller de LoginUser
 - Adicionar env para dados privados
 - Entender melhor Token Jwt (principalmente validação)
-- Melhorar verificacao de emaiç
+- Melhorar verificacao de email
