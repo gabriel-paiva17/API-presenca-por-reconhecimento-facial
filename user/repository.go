@@ -2,13 +2,13 @@ package user
 
 import (
 	"context"
-	"errors"
-
+	
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserRepository interface {
+	FindOneByEmail (ctx context.Context, email string) (*User, bool)
 	CreateUser(ctx context.Context, user *User) error
 }
 
@@ -42,9 +42,6 @@ func (r *MongoUserRepository) FindOneByEmail (ctx context.Context, email string)
 
 }
 
-var ErrEmailAlreadyExists = errors.New("email already used")
- 
-
 /////////////////////////
 // POST /auth/register //
 /////////////////////////
@@ -52,9 +49,9 @@ var ErrEmailAlreadyExists = errors.New("email already used")
 
 func (r *MongoUserRepository) CreateUser(ctx context.Context, user *User) error {
 	
-	_, exists :=  r.FindOneByEmail(ctx, user.Email)
+	_, found :=  r.FindOneByEmail(ctx, user.Email)
 	
-	if exists { 
+	if found { 
         return ErrEmailAlreadyExists
     }
 

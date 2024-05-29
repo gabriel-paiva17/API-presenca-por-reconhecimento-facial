@@ -13,8 +13,6 @@ func HashPassword(password string) (string, error) {
     return string(hashedPassword), nil
 }
 
-// CheckPasswordHash compara uma senha com seu hash
-func IsPasswordEqualHash(password, hash string) bool {
-    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-    return err == nil
+func IsHashEqualPassword(hash, password string) bool {
+    return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }

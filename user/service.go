@@ -2,7 +2,9 @@ package user
 
 import (
 	"context"
+	//"myproject/utils"
 	"time"
+	//"fmt"
 
 	"github.com/google/uuid"
 )
@@ -50,4 +52,27 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 // POST /auth/login //
 //////////////////////
 
-// func (s *UserService) Create 
+
+/*
+func (s *UserService) LoginUser (ctx context.Context, req *LoginRequest) (string, error) {
+
+	dbUser, found := s.repo.FindOneByEmail(ctx, req.Email)
+
+	if !found {
+        return "", utils.ErrNotFound
+    }
+
+	if !utils.IsHashEqualPassword(dbUser.Password, req.Password) {
+
+		return "", fmt.Errorf("invalid credentials")
+
+
+	}
+	
+	
+
+
+
+
+
+}*/

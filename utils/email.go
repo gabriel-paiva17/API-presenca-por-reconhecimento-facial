@@ -12,6 +12,9 @@ func IsValidEmailFormat(email string) bool {
     return re.MatchString(email)
 }
 
+
+// TODO: aprimorar funcoes de validacao de email
+
 func CheckMXRecords(domain string) bool {
     mxRecords, err := net.LookupMX(domain)
     return err == nil && len(mxRecords) > 0

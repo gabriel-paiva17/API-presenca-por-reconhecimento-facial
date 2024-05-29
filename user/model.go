@@ -1,7 +1,13 @@
 package user
+
+
+import "errors"
+
+
 //////////////////
 // Modelo do BD //
 //////////////////
+
 type User struct {
 	ID           string `json:"id" bson:"_id"`
 	Username     string `json:"username" bson:"username"`
@@ -40,3 +46,8 @@ type LoginResponse struct {
     Token string `json:"token"`
 }
 
+//////////////////////
+// Erros de usuario //
+//////////////////////
+
+var ErrEmailAlreadyExists = errors.New("email already used")
