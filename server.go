@@ -31,7 +31,7 @@ func CreateServer() {
 	r := mux.NewRouter()
 
 	userRepo := user.NewMongoUserRepository(client, "web_presenca", "users")
-	userService := user.NewUserService(userRepo)
+	userService := user.NewUserService(userRepo, "chave-secreta") // depois adicionar pasta env para armezenar dados sigilosos
 	userController := user.NewUserController(userService)
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")

@@ -2,20 +2,23 @@ package user
 
 import (
 	"context"
-	//"myproject/utils"
+	"myproject/utils"
 	"time"
-	//"fmt"
+	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type UserService struct {
 	repo UserRepository
+	jwtKey   []byte
 }
 
-func NewUserService(repo UserRepository) *UserService {
+func NewUserService(repo UserRepository, jwtKey string) *UserService {
 	return &UserService{
-		repo: repo,
+		repo:   repo,
+		jwtKey: []byte(jwtKey),
 	}
 }
 
@@ -52,8 +55,6 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 // POST /auth/login //
 //////////////////////
 
-
-/*
 func (s *UserService) LoginUser (ctx context.Context, req *LoginRequest) (string, error) {
 
 	dbUser, found := s.repo.FindOneByEmail(ctx, req.Email)
@@ -68,11 +69,20 @@ func (s *UserService) LoginUser (ctx context.Context, req *LoginRequest) (string
 
 
 	}
-	
-	
+
+	// configurando token de autenticacao
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+        "userId": dbUser.ID,
+        "exp":    time.Now().Add(time.Hour * 72).Unix(),
+    })
 
 
+	// adicionando chave secreta a assinatura
+    tokenString, err := token.SignedString(s.jwtKey)
+    if err != nil {
+        return "", err
+    }
 
+	return tokenString, nil
 
-
-}*/
+}
