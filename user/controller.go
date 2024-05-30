@@ -96,7 +96,7 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 
     response := LoginResponse{Token: token}
     res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
     json.NewEncoder(res).Encode(response)
-
 
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 	"fmt"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
@@ -13,11 +14,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"myproject/user"
+	"myproject/utils"
 )
 
 func CreateServer() {
 
-	client, ctx, cancel, err := connectDB("mongodb://localhost:27017")
+	// definindo variaves de ambiente
+
+	env := os.Getenv("APP_ENV")
+    if env == "" {
+        env = "development"
+    }
+    utils.LoadEnv(env)
+
+	mongoURI := os.Getenv("MONGO_URI")
+    secretKey := os.Getenv("SECRET_KEY")
+    serverAddr := os.Getenv("SERVER_ADDR")
+
+	// conectando ao db
+
+	client, ctx, cancel, err := connectDB(mongoURI)
 	if err != nil {
 		log.Fatal("Failed to connect to MongoDB:", err)
 	}
@@ -28,19 +44,24 @@ func CreateServer() {
 		cancel()
 	}()
 
+	// configurando router
+
 	r := mux.NewRouter()
 
 	userRepo := user.NewMongoUserRepository(client, "web_presenca", "users")
-	userService := user.NewUserService(userRepo, "chave-secreta") // depois adicionar pasta env para armezenar dados sigilosos
+	userService := user.NewUserService(userRepo, secretKey) // depois adicionar pasta env para armezenar dados sigilosos
 	userController := user.NewUserController(userService)
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
 
+
+	// definindo server e middleware
+
 	cors := configureCORS()
 
     s := &http.Server{
-        Addr:         "localhost:8080",
+        Addr:         serverAddr,
         Handler:      cors(r),
         ReadTimeout:  10 * time.Second,
         WriteTimeout: 10 * time.Second,
