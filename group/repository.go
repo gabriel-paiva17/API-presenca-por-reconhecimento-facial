@@ -42,15 +42,18 @@ func (r *MongoGroupRepository) FindOneByName(ctx context.Context, name string) (
 
 }
 
-func (r *MongoGroupRepository) CreateUser(ctx context.Context, group *Group) error {
+// POST /group
 
+func (r *MongoGroupRepository) CreateGroup(ctx context.Context, group *Group) error {
 
+	_, found :=  r.FindOneByName(ctx, group.Name)
+	
+	if found { 
+        return ErrNameAlreadyExists
+    }
 
-
-
-
-	return nil
-
-
+    _, err := r.collection.InsertOne(ctx, group)
+    
+	return err
 
 }

@@ -2,6 +2,7 @@ package group
 
 import (
     "myproject/member"
+	"errors"
 )
 
 type Group struct {
@@ -10,6 +11,8 @@ type Group struct {
     CreatedAt string           `json:"createdAt" bson:"createdAt"`
     Members   []member.Member  `json:"members" bson:"members"`
 }
+
+// POST /group
 
 type CreateGroupRequest struct {
     Name string `json:"name"`
@@ -20,3 +23,8 @@ type CreateGroupResponse struct {
     Name      string    `json:"name"`
     CreatedAt string    `json:"createdAt"`
 }
+
+
+// erros de grupo
+
+var ErrNameAlreadyExists = errors.New("name already used")
