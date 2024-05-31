@@ -7,25 +7,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type GroupRepository interface {
-
-	CreateUser(ctx context.Context, group *Group) error
-
-}
-
-type MongoGroupRepository struct {
+type GroupRepository struct {
 	collection *mongo.Collection
 }
 
-func NewMongoGroupRepository(client *mongo.Client, dbName string, collectionName string) *MongoGroupRepository {
+func NewMongoGroupRepository(client *mongo.Client, dbName string, collectionName string) *GroupRepository {
 	collection := client.Database(dbName).Collection(collectionName)
-	return &MongoGroupRepository{
+	return &GroupRepository{
 		collection: collection,
 	}
 }
 
 
-func (r *MongoGroupRepository) FindOneByName(ctx context.Context, name string) (*Group, bool) {
+func (r *GroupRepository) FindOneByName(ctx context.Context, name string) (*Group, bool) {
 
 	filter := bson.M{"name": name}
     existingGroup := &Group{}
@@ -44,7 +38,7 @@ func (r *MongoGroupRepository) FindOneByName(ctx context.Context, name string) (
 
 // POST /group
 
-func (r *MongoGroupRepository) CreateGroup(ctx context.Context, group *Group) error {
+func (r *GroupRepository) CreateGroup(ctx context.Context, group *Group) error {
 
 	_, found :=  r.FindOneByName(ctx, group.Name)
 	

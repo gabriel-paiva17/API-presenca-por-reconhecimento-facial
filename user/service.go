@@ -15,9 +15,9 @@ type UserService struct {
 	jwtKey   []byte
 }
 
-func NewUserService(repo UserRepository, jwtKey string) *UserService {
+func NewUserService(repo *UserRepository, jwtKey string) *UserService {
 	return &UserService{
-		repo:   repo,
+		repo:   *repo,
 		jwtKey: []byte(jwtKey),
 	}
 }

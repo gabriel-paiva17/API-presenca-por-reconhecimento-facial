@@ -7,23 +7,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type UserRepository interface {
-	FindOneByEmail (ctx context.Context, email string) (*User, bool)
-	CreateUser(ctx context.Context, user *User) error
-}
-
-type MongoUserRepository struct {
+type UserRepository struct {
 	collection *mongo.Collection
 }
 
-func NewMongoUserRepository(client *mongo.Client, dbName string, collectionName string) *MongoUserRepository {
+func NewMongoUserRepository(client *mongo.Client, dbName string, collectionName string) *UserRepository {
 	collection := client.Database(dbName).Collection(collectionName)
-	return &MongoUserRepository{
+	return &UserRepository{
 		collection: collection,
 	}
 }
 
-func (r *MongoUserRepository) FindOneByEmail (ctx context.Context, email string) (*User, bool) {
+func (r *UserRepository) FindOneByEmail (ctx context.Context, email string) (*User, bool) {
 
 	filter := bson.M{"email": email}
     existingUser := &User{}
@@ -47,7 +42,7 @@ func (r *MongoUserRepository) FindOneByEmail (ctx context.Context, email string)
 /////////////////////////
 
 
-func (r *MongoUserRepository) CreateUser(ctx context.Context, user *User) error {
+func (r *UserRepository) CreateUser(ctx context.Context, user *User) error {
 	
 	_, found :=  r.FindOneByEmail(ctx, user.Email)
 	
