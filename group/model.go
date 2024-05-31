@@ -10,3 +10,13 @@ type Group struct {
     CreatedAt string           `json:"createdAt" bson:"createdAt"`
     Members   []member.Member  `json:"members" bson:"members"`
 }
+
+type CreateGroupRequest struct {
+    Name string `json:"name"`
+}
+
+type CreateGroupResponse struct {
+    ID        string    `json:"id"`
+    Name      string    `json:"name"`
+    CreatedAt string    `json:"createdAt"`
+}
