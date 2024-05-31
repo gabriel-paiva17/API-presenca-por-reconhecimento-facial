@@ -1,8 +1,10 @@
 package group
 
 import (
-	"go.mongodb.org/mongo-driver/mongo"
 	"context"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type GroupRepository interface {
@@ -22,7 +24,23 @@ func NewMongoGroupRepository(client *mongo.Client, dbName string, collectionName
 	}
 }
 
-// func (r *MongoGroupRepository)
+
+func (r *MongoGroupRepository) FindOneByName(ctx context.Context, name string) (*Group, bool) {
+
+	filter := bson.M{"name": name}
+    existingGroup := &Group{}
+	
+	err := r.collection.FindOne(ctx, filter).Decode(existingGroup)
+
+	if err != nil {
+
+		return nil, false
+
+	}
+
+	return existingGroup, true 
+
+}
 
 func (r *MongoGroupRepository) CreateUser(ctx context.Context, group *Group) error {
 
