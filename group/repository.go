@@ -11,7 +11,7 @@ type GroupRepository struct {
 	collection *mongo.Collection
 }
 
-func NewMongoGroupRepository(client *mongo.Client, dbName string, collectionName string) *GroupRepository {
+func NewGroupRepository(client *mongo.Client, dbName string, collectionName string) *GroupRepository {
 	collection := client.Database(dbName).Collection(collectionName)
 	return &GroupRepository{
 		collection: collection,

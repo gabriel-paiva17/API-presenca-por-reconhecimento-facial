@@ -2,19 +2,21 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
-	"fmt"
 	"os"
+	"time"
 
-	"github.com/gorilla/mux"
+	"myproject/group"
+	"myproject/user"
+	"myproject/utils"
+
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"myproject/user"
-	"myproject/utils"
 )
 
 func CreateServer() {
@@ -48,13 +50,18 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	userRepo := user.NewMongoUserRepository(client, "web_presenca", "users")
+	userRepo := user.NewUserRepository(client, "web_presenca", "users")
+	groupRepo := group.NewGroupRepository(client, "web_presenca", "groups")
+
 	userService := user.NewUserService(userRepo, secretKey)
+	groupService := group.NewGroupService(groupRepo)
+
 	userController := user.NewUserController(userService)
+	groupController := group.NewGroupController(groupService)
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
-
+	r.HandleFunc("/grupos", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 
 	// definindo server e middleware
 
