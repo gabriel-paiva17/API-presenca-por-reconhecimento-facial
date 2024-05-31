@@ -94,9 +94,11 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
         return
     }
 
-    response := LoginResponse{Token: token}
-    res.Header().Set("Content-Type", "application/json")
-	res.WriteHeader(http.StatusOK)
+	res.Header().Set("Content-Type", "application/json")
+    res.Header().Set("Authorization", "Bearer "+token)
+    res.WriteHeader(http.StatusOK)
+
+	response := LoginResponse{Message: "Login realizado com sucesso."}
     json.NewEncoder(res).Encode(response)
 
 }
