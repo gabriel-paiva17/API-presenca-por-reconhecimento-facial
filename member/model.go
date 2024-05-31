@@ -5,5 +5,5 @@ type Member struct {
     Name        string `json:"name" bson:"name"`
     Face        string `json:"face" bson:"face"`
     Attendance   int    `json:"attendance" bson:"attendance"`
-    AdicionadoEm string `json:"addedAt" bson:"addedAt"`
+    AddedAt string `json:"addedAt" bson:"addedAt"`
 }
