@@ -94,11 +94,17 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
         return
     }
 
+
+	
 	res.Header().Set("Content-Type", "application/json")
+	res.Header().Set("Access-Control-Expose-Headers", "Authorization")
     res.Header().Set("Authorization", "Bearer "+token)
+
     res.WriteHeader(http.StatusOK)
 
 	response := LoginResponse{Message: "Login realizado com sucesso."}
-    json.NewEncoder(res).Encode(response)
+    if err := json.NewEncoder(res).Encode(response); err != nil {
+        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+    }
 
 }
