@@ -18,6 +18,22 @@ func NewGroupRepository(client *mongo.Client, dbName string, collectionName stri
 	}
 }
 
+func (r *GroupRepository) FindAllGroupsByUserID(userID string, ctx context.Context) ([]Group, error) {
+	
+	var groups []Group
+
+	filter := bson.M{"createdBy": userID}
+	
+	cursor, err := r.collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	
+	if err = cursor.All(ctx, &groups); err != nil {
+		return nil, err
+	}
+	return groups, nil
+}
 
 func (r *GroupRepository) FindOneByNameAndCreator(ctx context.Context, name string, createdBy string) (*Group, bool) {
 
