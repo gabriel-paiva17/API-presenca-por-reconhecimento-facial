@@ -73,7 +73,7 @@ func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest) (string,
 	// configurando token de autenticacao
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
         "userId": dbUser.ID,
-        "exp":    time.Now().Add(time.Hour * 72).Unix(),
+        "exp":    time.Now().Add(time.Hour * 12).Unix(),
     })
 
 

@@ -17,7 +17,7 @@ func Authenticate(next func(res http.ResponseWriter, req *http.Request)) func(re
 
 		if !authenticated {
 			
-			WriteErrorResponse(res, http.StatusUnauthorized, "Acesso necessita autenticacao.")
+			WriteErrorResponse(res, http.StatusUnauthorized, "Requisicao necessita autenticacao.")
 			return
 		
 		}

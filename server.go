@@ -61,6 +61,8 @@ func CreateServer() {
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
+	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUserHandler)).Methods("POST")
+	
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 
 	// definindo server e middleware

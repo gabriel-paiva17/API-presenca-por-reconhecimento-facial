@@ -53,9 +53,13 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
-	json.NewEncoder(res).Encode(map[string]interface{}{
+	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Grupo criado com sucesso.",
 		"group":    response,
 	})
+
+	if encodeErr != nil {
+        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+    }
 
 }

@@ -46,6 +46,15 @@ type LoginResponse struct {
     Message string `json:"message"`
 }
 
+///////////////////////
+// POST /auth/logout //
+///////////////////////
+
+type LogoutResponse struct {
+    Message string `json:"message"`
+	Date 	string `json:"date"`
+}
+
 //////////////////////
 // Erros de usuario //
 //////////////////////
