@@ -22,7 +22,6 @@ func (s *GroupService) GetGroups (userID string, ctx context.Context) ([]GroupBy
 
 	groups, err := s.repo.FindAllGroupsByUserID(userID, ctx)
 
-	// deve ser 500
 	if err != nil {
 
 		return nil, err

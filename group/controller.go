@@ -17,11 +17,46 @@ func NewGroupController(service *GroupService) *GroupController {
 	}
 }
 
+// GET /grupos
+
+func (c *GroupController) GetGroupsByUserID(res http.ResponseWriter, req *http.Request) {
+
+	userID, _ := utils.GetAuthenticatedUserId(req)
+
+	groupsByName, err := c.service.GetGroups(userID, req.Context())
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return 
+
+	}
+
+    if len(groupsByName) == 0 { 
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, "Nenhum grupo foi encontrado.")
+        return
+
+	}
+
+    getGroupsResponse := GetGroupsResponse{Groups: groupsByName}
+    
+    res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+
+    encodeErr := json.NewEncoder(res).Encode(getGroupsResponse)
+	if encodeErr != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro Interno do Server")
+		return
+	}
+}
+
 func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.Request) {
 
 	var createGroupReq CreateGroupRequest
 	if err := json.NewDecoder(req.Body).Decode(&createGroupReq); err != nil {
-		http.Error(res, "Invalid request body", http.StatusBadRequest)
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body Invalido")
 		return
 	}
 
@@ -60,6 +95,7 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 	if encodeErr != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		return
     }
 
 }

@@ -106,6 +106,7 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 	response := LoginResponse{Message: "Login realizado com sucesso."}
     if err := json.NewEncoder(res).Encode(response); err != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		return
     }
 
 }
@@ -126,6 +127,7 @@ func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Re
 
 	if err := json.NewEncoder(res).Encode(response); err != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		return
     }
 
 }
