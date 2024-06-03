@@ -13,7 +13,18 @@ type Group struct {
     CreatedBy string           `json:"createdBy" bson:"createdBy"`
 }
 
-// POST /group
+// GET /grupos
+
+
+type GetGroupsResponse struct {
+    Groups []GroupByName `json:"groups"`
+}
+
+type GroupByName struct {
+    Name string `json:"name"`
+}
+
+// POST /grupos
 
 type CreateGroupRequest struct {
     Name string         `json:"name"`
