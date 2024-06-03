@@ -17,11 +17,14 @@ func NewGroupService(repo *GroupRepository) *GroupService {
 }
 
 func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest) (*Group, error) {
+	
 	group := &Group{
 		ID:        uuid.New().String(),
 		Name:      req.Name,
 		CreatedAt: time.Now().Format(time.RFC3339),
 		Members:   []member.Member{},
+		CreatedBy: req.CreatedBy,
+
 	}
 
 	err := s.repo.CreateGroup(ctx, group)

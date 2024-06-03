@@ -13,7 +13,7 @@ func Authenticate(next func(res http.ResponseWriter, req *http.Request)) func(re
 	
 	return func(res http.ResponseWriter, req *http.Request) {
 		// Verificar a autenticação aqui
-		authenticated := isAuthenticated(req)
+		_, authenticated := GetAuthenticatedUserId(req)
 
 		if !authenticated {
 			
@@ -28,13 +28,13 @@ func Authenticate(next func(res http.ResponseWriter, req *http.Request)) func(re
 	}
 }
 
-func isAuthenticated(req *http.Request) bool {
+func GetAuthenticatedUserId(req *http.Request) (string, bool) {
 
 	jwtKey := []byte(os.Getenv("SECRET_KEY"))
 
 	authHeader := req.Header.Get("Authorization")
     if authHeader == "" {
-        return false
+        return "", false
     }
 
     tokenString, _ := strings.CutPrefix(authHeader, "Bearer ")
@@ -49,24 +49,24 @@ func isAuthenticated(req *http.Request) bool {
     })
 
     if err != nil || !token.Valid {
-        return false
+        return "", false
     }
 
     claims, ok := token.Claims.(jwt.MapClaims)
     if !ok {
-        return false
+        return "", false
     }
 
     userID, ok := claims["userId"].(string)
     if !ok || userID == "" {
-        return false
+        return "", false
     }
 
     exp, ok := claims["exp"].(float64)
     if !ok || time.Unix(int64(exp), 0).Before(time.Now()) {
-        return false
+        return "", false
     }
 
-    return true
+    return userID, true
 
 }

@@ -25,13 +25,17 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 		return
 	}
 
+	userID, _ := utils.GetAuthenticatedUserId(req)
+
+	createGroupReq.CreatedBy = userID
+
 	ctx := req.Context()
 	group, err := c.service.CreateGroup(ctx, &createGroupReq)
 	
 	if errors.Is(err, ErrNameAlreadyExists) {
 
 		utils.WriteErrorResponse(res, http.StatusConflict, "Nome ja utilizado.")
-
+		return
 
 	}
 
@@ -44,6 +48,7 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 		ID:        group.ID,
 		Name:      group.Name,
 		CreatedAt: group.CreatedAt,
+		CreatedBy: group.CreatedBy,
 	}
 
 	res.Header().Set("Content-Type", "application/json")
