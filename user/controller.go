@@ -118,10 +118,11 @@ func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Re
 
 	var response LogoutResponse
 
-	res.WriteHeader(http.StatusNoContent)
-
 	response.Date = time.Now().Format(time.RFC3339)
 	response.Message = "Logout realizado com sucesso!"
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(res).Encode(response); err != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
