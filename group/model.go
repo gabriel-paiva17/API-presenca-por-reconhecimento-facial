@@ -29,4 +29,4 @@ type CreateGroupResponse struct {
 
 // erros de grupo
 
-var ErrNameAlreadyExists = errors.New("name already used")
+var ErrNameAlreadyExists = errors.New("name already used by you")

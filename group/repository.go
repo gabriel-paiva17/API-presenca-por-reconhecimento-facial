@@ -19,9 +19,9 @@ func NewGroupRepository(client *mongo.Client, dbName string, collectionName stri
 }
 
 
-func (r *GroupRepository) FindOneByName(ctx context.Context, name string) (*Group, bool) {
+func (r *GroupRepository) FindOneByNameAndCreator(ctx context.Context, name string, createdBy string) (*Group, bool) {
 
-	filter := bson.M{"name": name}
+	filter := bson.M{"name": name, "createdBy": createdBy}
     existingGroup := &Group{}
 	
 	err := r.collection.FindOne(ctx, filter).Decode(existingGroup)
@@ -40,7 +40,7 @@ func (r *GroupRepository) FindOneByName(ctx context.Context, name string) (*Grou
 
 func (r *GroupRepository) CreateGroup(ctx context.Context, group *Group) error {
 
-	_, found :=  r.FindOneByName(ctx, group.Name)
+	_, found :=  r.FindOneByNameAndCreator(ctx, group.Name, group.CreatedBy)
 	
 	if found { 
         return ErrNameAlreadyExists

@@ -34,7 +34,7 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 	
 	if errors.Is(err, ErrNameAlreadyExists) {
 
-		utils.WriteErrorResponse(res, http.StatusConflict, "Nome ja utilizado.")
+		utils.WriteErrorResponse(res, http.StatusConflict, "Nome ja utilizado por voce.")
 		return
 
 	}
