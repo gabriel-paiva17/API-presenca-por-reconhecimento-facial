@@ -63,7 +63,7 @@ func CreateServer() {
 	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUserHandler)).Methods("POST")
 	
-	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetGroupsByUserID)).Methods("GET")
+	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 
 	// configurando server e CORS

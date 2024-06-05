@@ -19,7 +19,7 @@ func NewGroupController(service *GroupService) *GroupController {
 
 // GET /grupos
 
-func (c *GroupController) GetGroupsByUserID(res http.ResponseWriter, req *http.Request) {
+func (c *GroupController) GetAllGroupsByUserID(res http.ResponseWriter, req *http.Request) {
 
 	userID, _ := utils.GetAuthenticatedUserId(req)
 
@@ -39,7 +39,7 @@ func (c *GroupController) GetGroupsByUserID(res http.ResponseWriter, req *http.R
 
 	}
 
-    getGroupsResponse := GetGroupsResponse{Groups: groupsByName}
+    getGroupsResponse := GetAllGroupsResponse{Groups: groupsByName}
     
     res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
@@ -51,6 +51,8 @@ func (c *GroupController) GetGroupsByUserID(res http.ResponseWriter, req *http.R
 		return
 	}
 }
+
+// POST /grupos
 
 func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.Request) {
 
@@ -99,3 +101,6 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
     }
 
 }
+
+// GET grupos/{nome-do-grupo}
+

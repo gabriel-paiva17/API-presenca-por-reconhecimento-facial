@@ -15,8 +15,7 @@ type Group struct {
 
 // GET /grupos
 
-
-type GetGroupsResponse struct {
+type GetAllGroupsResponse struct {
     Groups []GroupByName `json:"groups"`
 }
 

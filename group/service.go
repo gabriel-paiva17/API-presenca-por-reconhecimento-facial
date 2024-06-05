@@ -4,6 +4,7 @@ import (
 	"context"
 	"myproject/member"
 	"time"
+	"errors"
 
 	"github.com/google/uuid"
 )
@@ -56,6 +57,23 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 	err := s.repo.CreateGroup(ctx, group)
 	if err != nil {
 		return nil, err
+	}
+
+	return group, nil
+
+}
+
+
+// GET /grupos/{nome-do-grupo}
+
+func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Context) (*Group, error) {
+	
+	group, ok := s.repo.FindOneByNameAndCreator(ctx,groupName, userId)
+
+	if !ok {
+
+		return nil, errors.New("not found")
+
 	}
 
 	return group, nil
