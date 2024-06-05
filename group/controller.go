@@ -2,9 +2,9 @@ package group
 
 import (
 	"encoding/json"
+	"errors"
 	"myproject/utils"
 	"net/http"
-	"errors"
 
 	"github.com/gorilla/mux"
 )
