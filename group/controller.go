@@ -5,6 +5,8 @@ import (
 	"myproject/utils"
 	"net/http"
 	"errors"
+
+	"github.com/gorilla/mux"
 )
 
 type GroupController struct {
@@ -104,3 +106,21 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 // GET grupos/{nome-do-grupo}
 
+func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Request) {
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	group, err := c.service.GetGroupByName(groupName, userId, req.Context())
+	if err != nil {
+		utils.WriteErrorResponse(res, http.StatusNotFound, "Grupo do usuário não foi encontrado.")
+		return
+	}
+
+	encodeErr := json.NewEncoder(res).Encode(group)
+	if encodeErr != nil {
+        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		return
+    }
+}
