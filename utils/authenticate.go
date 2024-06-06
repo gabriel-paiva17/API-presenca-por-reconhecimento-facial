@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/http"
+    "encoding/json"
 	"github.com/golang-jwt/jwt"
 	"strings"
 	"os"
@@ -69,4 +70,22 @@ func GetAuthenticatedUserId(req *http.Request) (string, bool) {
 
     return userID, true
 
+}
+
+// function that only guarantees the user authentication
+func CheckAuthenthentication() func(res http.ResponseWriter, req *http.Request) {
+    
+    return Authenticate(func(res http.ResponseWriter, req *http.Request) {
+        
+        res.Header().Set("Content-Type", "application/json")
+        res.WriteHeader(http.StatusOK)
+        encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+            "message": "Usuário autenticado.",
+        })
+        if encodeErr != nil {
+
+            WriteErrorResponse(res, http.StatusInternalServerError, "Erro Interno do Server")
+            return
+        }
+    })
 }

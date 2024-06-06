@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-
 	"myproject/group"
 	"myproject/user"
 	"myproject/utils"
@@ -64,7 +63,8 @@ func CreateServer() {
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUserHandler)).Methods("POST")
 	
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
-	r.HandleFunc("/grupos", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
+	r.HandleFunc("/grupos/criar", utils.CheckAuthenthentication()).Methods("GET")	
+	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
 
 
