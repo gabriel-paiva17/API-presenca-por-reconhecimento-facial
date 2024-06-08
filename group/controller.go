@@ -30,23 +30,23 @@ func (c *GroupController) GetAllGroupsByUserID(res http.ResponseWriter, req *htt
 	if err != nil {
 
 		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
-		return 
+		return
 
 	}
 
-    if len(groupsByName) == 0 { 
+	if len(groupsByName) == 0 {
 
 		utils.WriteErrorResponse(res, http.StatusNotFound, "Nenhum grupo foi encontrado.")
-        return
+		return
 
 	}
 
-    getGroupsResponse := GetAllGroupsResponse{Groups: groupsByName}
-    
-    res.Header().Set("Content-Type", "application/json")
+	getGroupsResponse := GetAllGroupsResponse{Groups: groupsByName}
+
+	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
 
-    encodeErr := json.NewEncoder(res).Encode(getGroupsResponse)
+	encodeErr := json.NewEncoder(res).Encode(getGroupsResponse)
 	if encodeErr != nil {
 
 		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro Interno do Server")
@@ -70,7 +70,7 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 	ctx := req.Context()
 	group, err := c.service.CreateGroup(ctx, &createGroupReq)
-	
+
 	if errors.Is(err, ErrNameAlreadyExists) {
 
 		utils.WriteErrorResponse(res, http.StatusConflict, "Nome ja utilizado por voce.")
@@ -94,13 +94,13 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 	res.WriteHeader(http.StatusCreated)
 	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Grupo criado com sucesso.",
-		"group":    response,
+		"group":   response,
 	})
 
 	if encodeErr != nil {
-        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
 		return
-    }
+	}
 
 }
 
@@ -120,7 +120,7 @@ func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Req
 
 	encodeErr := json.NewEncoder(res).Encode(group)
 	if encodeErr != nil {
-        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
 		return
-    }
+	}
 }

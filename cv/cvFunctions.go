@@ -1,36 +1,103 @@
 package cv
 
 import (
-    "encoding/base64"
-    "fmt"
- 
-    "gocv.io/x/gocv"
+	"encoding/base64"
+	"fmt"
+	"math"
+
+	"github.com/Kagami/go-face"
 )
 
+const (
+	modelDir = "faceModels"
+)
+
+/////////////////////////////////////////////////
+// parece que só funciona com .jpg, multilinha //
+/////////////////////////////////////////////////
+
+
+// Decodifica uma imagem base64 e retorna os dados como []byte
+func decodeBase64Image(base64Image string) ([]byte, error) {
+	// Decodificar a imagem base64
+	imageData, err := base64.StdEncoding.DecodeString(base64Image)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao decodificar imagem base64: %v", err)
+	}
+
+	return imageData, nil
+}
+
+// Conta o número de rostos em uma imagem base64
 func CountFaces(base64Image string) (int, error) {
-    // Decodificar a string base64 para um array de bytes
-    imageData, err := base64.StdEncoding.DecodeString(base64Image)
-    if err != nil {
-        return 0, fmt.Errorf("erro ao decodificar imagem base64: %v", err)
-    }
+	recognizer, err := face.NewRecognizer(modelDir)
+	if err != nil {
+		return 0, fmt.Errorf("erro ao criar reconhecedor: %v", err)
+	}
+	defer recognizer.Close()
 
-    // Ler a imagem a partir dos bytes decodificados
-    img, err := gocv.IMDecode(imageData, gocv.IMReadColor)
-    if err != nil {
-        return 0, fmt.Errorf("erro ao ler imagem: %v", err)
-    }
-    defer img.Close()
+	imgData, err := decodeBase64Image(base64Image)
+	if err != nil {
+		return 0, err
+	}
 
-    // Carregar o classificador de detecção de faces
-    classifier := gocv.NewCascadeClassifier()
-    defer classifier.Close()
+	faces, err := recognizer.Recognize(imgData)
+	if err != nil {
+		return 0, fmt.Errorf("erro ao reconhecer rostos na imagem: %v", err)
+	}
 
-    if !classifier.Load("statics/haarcascade_frontalface_default.xml") {
-        return 0, fmt.Errorf("erro ao carregar classificador de faces")
-    }
+	return len(faces), nil
+}
 
-    // Detectar rostos na imagem
-    rects := classifier.DetectMultiScale(img)
+// Calcula a distância euclidiana entre dois descritores faciais
+func euclideanDistance(descriptor1, descriptor2 face.Descriptor) float32 {
+	var sum float32
+	for i := range descriptor1 {
+		diff := descriptor1[i] - descriptor2[i]
+		sum += diff * diff
+	}
+	return float32(math.Sqrt(float64(sum)))
+}
 
-    return len(rects), nil
+// Compara dois rostos em imagens base64 para ver se são da mesma pessoa
+func CompareFaces(base64Image1, base64Image2 string) (bool, error) {
+	recognizer, err := face.NewRecognizer(modelDir)
+	if err != nil {
+		return false, fmt.Errorf("erro ao criar reconhecedor: %v", err)
+	}
+	defer recognizer.Close()
+
+	imgData1, err := decodeBase64Image(base64Image1)
+	if err != nil {
+		return false, err
+	}
+
+	imgData2, err := decodeBase64Image(base64Image2)
+	if err != nil {
+		return false, err
+	}
+
+	faces1, err := recognizer.Recognize(imgData1)
+	if err != nil {
+		return false, fmt.Errorf("erro ao reconhecer rostos na primeira imagem: %v", err)
+	}
+
+	faces2, err := recognizer.Recognize(imgData2)
+	if err != nil {
+		return false, fmt.Errorf("erro ao reconhecer rostos na segunda imagem: %v", err)
+	}
+
+	if len(faces1) == 0 || len(faces2) == 0 {
+		return false, fmt.Errorf("nenhum rosto encontrado em uma das imagens")
+	}
+
+	face1 := faces1[0].Descriptor
+	face2 := faces2[0].Descriptor
+
+	distance := euclideanDistance(face1, face2)
+
+	const threshold = 0.6
+	isSamePerson := distance < threshold
+
+	return isSamePerson, nil
 }

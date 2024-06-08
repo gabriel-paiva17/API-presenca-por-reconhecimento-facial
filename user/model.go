@@ -1,8 +1,6 @@
 package user
 
-
 import "errors"
-
 
 //////////////////
 // Modelo do BD //
@@ -38,12 +36,12 @@ type CreateUserResponse struct {
 //////////////////////
 
 type LoginRequest struct {
-    Email    string `json:"email"`
-    Password string `json:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type LoginResponse struct {
-    Message string `json:"message"`
+	Message string `json:"message"`
 }
 
 ///////////////////////
@@ -51,8 +49,8 @@ type LoginResponse struct {
 ///////////////////////
 
 type LogoutResponse struct {
-    Message string `json:"message"`
-	Date 	string `json:"date"`
+	Message string `json:"message"`
+	Date    string `json:"date"`
 }
 
 //////////////////////

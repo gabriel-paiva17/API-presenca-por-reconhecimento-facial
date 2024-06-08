@@ -23,7 +23,7 @@ func NewUserController(service *UserService) *UserController {
 /////////////////////////
 
 func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Request) {
-	
+
 	var createUserRequest CreateUserRequest
 	if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {
 		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
@@ -46,7 +46,7 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	ctx := req.Context()
 
 	createUserResponse, err := c.service.CreateUser(ctx, &createUserRequest)
-	
+
 	if errors.Is(err, ErrEmailAlreadyExists) {
 
 		utils.WriteErrorResponse(res, http.StatusConflict, "Email ja utilizado anteriormente.")
@@ -67,8 +67,8 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 		"user":    createUserResponse,
 	})
 	if encodeErr != nil {
-        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-    }
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+	}
 }
 
 //////////////////////
@@ -78,36 +78,36 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Request) {
 
 	var loginReq LoginRequest
-    if err := json.NewDecoder(req.Body).Decode(&loginReq); err != nil {
-        utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
-        return
-    }
+	if err := json.NewDecoder(req.Body).Decode(&loginReq); err != nil {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body invalido.")
+		return
+	}
 
-    token, err := c.service.LoginUser(req.Context(), &loginReq)
-    
+	token, err := c.service.LoginUser(req.Context(), &loginReq)
+
 	if err == ErrGeneratingToken {
 
 		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
-        return
-		
+		return
+
 	}
-	
+
 	if err != nil {
 		utils.WriteErrorResponse(res, http.StatusUnauthorized, err.Error())
-        return
-    }
+		return
+	}
 
 	res.Header().Set("Content-Type", "application/json")
 	res.Header().Set("Access-Control-Expose-Headers", "Authorization")
-    res.Header().Set("Authorization", "Bearer "+token)
+	res.Header().Set("Authorization", "Bearer "+token)
 
-    res.WriteHeader(http.StatusOK)
+	res.WriteHeader(http.StatusOK)
 
 	response := LoginResponse{Message: "Login realizado com sucesso."}
-    if err := json.NewEncoder(res).Encode(response); err != nil {
-        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+	if err := json.NewEncoder(res).Encode(response); err != nil {
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
 		return
-    }
+	}
 
 }
 
@@ -126,8 +126,8 @@ func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Re
 	res.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(res).Encode(response); err != nil {
-        utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
 		return
-    }
+	}
 
 }

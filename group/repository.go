@@ -21,16 +21,16 @@ func NewGroupRepository(client *mongo.Client, dbName string, collectionName stri
 // GET /grupos
 
 func (r *GroupRepository) FindAllGroupsByUserID(userID string, ctx context.Context) ([]Group, error) {
-	
+
 	var groups []Group
 
 	filter := bson.M{"createdBy": userID}
-	
+
 	cursor, err := r.collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if err = cursor.All(ctx, &groups); err != nil {
 		return nil, err
 	}
@@ -40,8 +40,8 @@ func (r *GroupRepository) FindAllGroupsByUserID(userID string, ctx context.Conte
 func (r *GroupRepository) FindOneByNameAndCreator(ctx context.Context, groupName string, createdBy string) (*Group, bool) {
 
 	filter := bson.M{"name": groupName, "createdBy": createdBy}
-    existingGroup := &Group{}
-	
+	existingGroup := &Group{}
+
 	err := r.collection.FindOne(ctx, filter).Decode(existingGroup)
 
 	if err != nil {
@@ -50,7 +50,7 @@ func (r *GroupRepository) FindOneByNameAndCreator(ctx context.Context, groupName
 
 	}
 
-	return existingGroup, true 
+	return existingGroup, true
 
 }
 
@@ -58,14 +58,14 @@ func (r *GroupRepository) FindOneByNameAndCreator(ctx context.Context, groupName
 
 func (r *GroupRepository) CreateGroup(ctx context.Context, group *Group) error {
 
-	_, found :=  r.FindOneByNameAndCreator(ctx, group.Name, group.CreatedBy)
-	
-	if found { 
-        return ErrNameAlreadyExists
-    }
+	_, found := r.FindOneByNameAndCreator(ctx, group.Name, group.CreatedBy)
 
-    _, err := r.collection.InsertOne(ctx, group)
-    
+	if found {
+		return ErrNameAlreadyExists
+	}
+
+	_, err := r.collection.InsertOne(ctx, group)
+
 	return err
 
 }

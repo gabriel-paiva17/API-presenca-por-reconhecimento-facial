@@ -1,3 +1,5 @@
+github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e h1:lqIUFzxaqyYqUn4MhzAvSAh4wIte/iLNcIEWxpT/qbc=
+github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e/go.mod h1:9wdDJkRgo3SGTcFwbQ7elVIQhIr2bbBjecuY7VoqmPU=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=

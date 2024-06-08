@@ -2,9 +2,9 @@ package group
 
 import (
 	"context"
+	"errors"
 	"myproject/member"
 	"time"
-	"errors"
 
 	"github.com/google/uuid"
 )
@@ -19,19 +19,19 @@ func NewGroupService(repo *GroupRepository) *GroupService {
 
 // GET /grupos
 
-func (s *GroupService) GetGroups (userID string, ctx context.Context) ([]GroupByName, error) {
+func (s *GroupService) GetGroups(userID string, ctx context.Context) ([]GroupByName, error) {
 
 	groups, err := s.repo.FindAllGroupsByUserID(userID, ctx)
 
 	if err != nil {
 
 		return nil, err
-	
+
 	}
 
 	var groupsByName []GroupByName
 
-	for _, g  := range groups {
+	for _, g := range groups {
 
 		groupsByName = append(groupsByName, GroupByName{Name: g.Name})
 
@@ -44,14 +44,13 @@ func (s *GroupService) GetGroups (userID string, ctx context.Context) ([]GroupBy
 // POST /grupos
 
 func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest) (*Group, error) {
-	
+
 	group := &Group{
 		ID:        uuid.New().String(),
 		Name:      req.Name,
 		CreatedAt: time.Now().Format(time.RFC3339),
 		Members:   []member.Member{},
 		CreatedBy: req.CreatedBy,
-
 	}
 
 	err := s.repo.CreateGroup(ctx, group)
@@ -63,12 +62,11 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 
 }
 
-
 // GET /grupos/{nome-do-grupo}
 
 func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Context) (*Group, error) {
-	
-	group, ok := s.repo.FindOneByNameAndCreator(ctx,groupName, userId)
+
+	group, ok := s.repo.FindOneByNameAndCreator(ctx, groupName, userId)
 
 	if !ok {
 

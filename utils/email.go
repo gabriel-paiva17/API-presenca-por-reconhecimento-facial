@@ -1,48 +1,46 @@
 package utils
 
 import (
-    "net"
-    "regexp"
-    "strings"
+	"net"
+	"regexp"
+	"strings"
 )
 
 func IsValidEmailFormat(email string) bool {
-    const emailRegexPattern = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-    re := regexp.MustCompile(emailRegexPattern)
-    return re.MatchString(email)
+	const emailRegexPattern = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(emailRegexPattern)
+	return re.MatchString(email)
 }
-
 
 // TODO: aprimorar funcoes de validacao de email
 
 func CheckMXRecords(domain string) bool {
-    mxRecords, err := net.LookupMX(domain)
-    return err == nil && len(mxRecords) > 0
+	mxRecords, err := net.LookupMX(domain)
+	return err == nil && len(mxRecords) > 0
 }
 
 func IsValidEmail(email string) bool {
-    if !IsValidEmailFormat(email) {
-        return false
-    }
+	if !IsValidEmailFormat(email) {
+		return false
+	}
 
-    parts := strings.Split(email, "@")
-    if len(parts) != 2 {
-        return false
-    }
+	parts := strings.Split(email, "@")
+	if len(parts) != 2 {
+		return false
+	}
 
-    domain := parts[1]
-    return CheckMXRecords(domain)
+	domain := parts[1]
+	return CheckMXRecords(domain)
 }
 
-// nao verifica se é um email real, 
-// somente se o formato e valido, 
+// nao verifica se é um email real,
+// somente se o formato e valido,
 // e o dominio tambem
 
 // talvez alterar isso no futuro
 
-
 // considerar envio de email de verificacao
-// ex inicial: 
+// ex inicial:
 
 /*
 

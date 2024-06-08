@@ -6,28 +6,28 @@ import (
 )
 
 type ErrorResponse struct {
-    Error   string `json:"error"`
-    Message string `json:"message"`
+	Error   string `json:"error"`
+	Message string `json:"message"`
 }
 
 var errorMap = map[int]string{
-    http.StatusBadRequest:          "Bad Request",
-    http.StatusUnauthorized:        "Unauthorized",
-    http.StatusNotFound:            "Not Found",
-	http.StatusConflict:			"Conflict",
-    http.StatusInternalServerError: "Internal Server Error",
+	http.StatusBadRequest:          "Bad Request",
+	http.StatusUnauthorized:        "Unauthorized",
+	http.StatusNotFound:            "Not Found",
+	http.StatusConflict:            "Conflict",
+	http.StatusInternalServerError: "Internal Server Error",
 }
 
 func WriteErrorResponse(res http.ResponseWriter, statusCode int, Message string) {
-    
+
 	res.Header().Set("Content-Type", "application/json")
-    res.WriteHeader(statusCode)
+	res.WriteHeader(statusCode)
 
-    errorText, ok := errorMap[statusCode]
-    if !ok {
-        errorText = "Undefined Error in errorMap"
-    }
+	errorText, ok := errorMap[statusCode]
+	if !ok {
+		errorText = "Undefined Error in errorMap"
+	}
 
-    errResponse := ErrorResponse{Error: errorText, Message: Message}
-    json.NewEncoder(res).Encode(errResponse)
+	errResponse := ErrorResponse{Error: errorText, Message: Message}
+	json.NewEncoder(res).Encode(errResponse)
 }

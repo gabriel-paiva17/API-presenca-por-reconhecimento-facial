@@ -1,30 +1,41 @@
 package main
 
 import (
+	"fmt"
 	"myproject/cv"
 	"os"
-	"fmt"
 )
 
-
 func main() {
-	
-	caminhoDoArquivo := "statics/2people_base64.txt"
 
-    // Lendo o arquivo
-    conteudo, err := os.ReadFile(caminhoDoArquivo)
-    if err != nil {
+	caminhoDoArquivo1 := "statics/lJames.txt"
+	caminhoDoArquivo2 := "statics/messi2.txt"
+
+
+	// Lendo o arquivo
+	conteudo1, err := os.ReadFile(caminhoDoArquivo1)
+	if err != nil {
 		fmt.Printf("Erro ao ler o arquivo: %v", err)
 		return
 	}
 
-    // Convertendo o conteúdo para string e atribuindo à variável
-    base64image := string(conteudo)
+	conteudo2, err := os.ReadFile(caminhoDoArquivo2)
+	if err != nil {
+		fmt.Printf("Erro ao ler o arquivo: %v", err)
+		return
+	}
 
-	c, err := cv.CountFaces(base64image)
+	// Convertendo o conteúdo para string e atribuindo à variável
+	base64image1 := string(conteudo1)
+	base64image2 := string(conteudo2)
 
-	fmt.Printf("Faces: %v\nErro: %v", c, err)
+	c, err := cv.CountFaces(base64image1)
+
+	fmt.Printf("Faces: %v\nErro: %v\n\n", c, err)
 
 	// CreateServer()
-}
 
+	r, err := cv.CompareFaces(base64image1, base64image2)
+
+	fmt.Printf("Resultado: %v,\nErro: %v", r, err)
+}
