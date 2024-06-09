@@ -3,7 +3,6 @@ package group
 import (
 	"context"
 	"errors"
-	"myproject/member"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,7 +48,7 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 		ID:        uuid.New().String(),
 		Name:      req.Name,
 		CreatedAt: time.Now().Format(time.RFC3339),
-		Members:   []member.Member{},
+		Members:   []Member{},
 		CreatedBy: req.CreatedBy,
 	}
 
@@ -62,7 +61,7 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 
 }
 
-// GET /grupos/{nome-do-grupo}
+// GET /grupos/{nome-do-grupo}/detalhes
 
 func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Context) (*Group, error) {
 

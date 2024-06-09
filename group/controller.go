@@ -104,7 +104,7 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 }
 
-// GET grupos/{nome-do-grupo}
+// GET grupos/{nome-do-grupo}/detalhes
 
 func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Request) {
 	userId, _ := utils.GetAuthenticatedUserId(req)

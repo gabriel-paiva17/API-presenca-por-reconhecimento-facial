@@ -2,14 +2,13 @@ package group
 
 import (
 	"errors"
-	"myproject/member"
 )
 
 type Group struct {
 	ID        string          `json:"id" bson:"_id"`
 	Name      string          `json:"name" bson:"name"`
 	CreatedAt string          `json:"createdAt" bson:"createdAt"`
-	Members   []member.Member `json:"members" bson:"members"`
+	Members   []Member 		  `json:"members" bson:"members"`
 	CreatedBy string          `json:"createdBy" bson:"createdBy"`
 }
 
@@ -35,6 +34,23 @@ type CreateGroupResponse struct {
 	Name      string `json:"name"`
 	CreatedAt string `json:"createdAt"`
 	CreatedBy string `json:"createdBy"`
+}
+
+// POST /grupos/{nome-do-grupo}/detalhes/adicionar
+
+type Member struct {
+	ID         string `json:"id" bson:"_id"`
+	Name       string `json:"name" bson:"name"`
+	Face       string `json:"face" bson:"face"`
+	Attendance int    `json:"attendance" bson:"attendance"`
+	AddedAt    string `json:"addedAt" bson:"addedAt"`
+}
+
+type CreateMemberRequest struct {
+
+	Name	string `json:"name"`
+	Face 	string `json:"face"`
+
 }
 
 // erros de grupo
