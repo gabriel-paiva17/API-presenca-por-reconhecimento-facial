@@ -46,7 +46,7 @@ type Member struct {
 	AddedAt    string `json:"addedAt" bson:"addedAt"`
 }
 
-type CreateMemberRequest struct {
+type AddMemberRequest struct {
 
 	Name	string `json:"name"`
 	Face 	string `json:"face"`

@@ -74,7 +74,7 @@ func (r *GroupRepository) CreateGroup(ctx context.Context, group *Group) error {
 
 // POST /grupos/{nome-do-grupo}/detalhes/adicionar
 
-func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName string, createdBy string, newMember Member) error {
+func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName, createdBy string, newMember *Member) (*Member, error) {
 	// Verificar se já existe um membro com o mesmo nome no grupo
 	filter := bson.M{
 		"name":      groupName,
@@ -85,26 +85,26 @@ func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName string
 	}
 	count, err := r.collection.CountDocuments(ctx, filter)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if count > 0 {
-		return errors.New("member with the same name already exists in the group")
+		return nil, errors.New("member with the same name already exists in the group")
 	}
 
 	// Obter o grupo
 	group, found := r.FindOneByNameAndCreator(ctx, groupName, createdBy)
 	if !found {
-		return errors.New("group not found")
+		return nil, errors.New("group not found")
 	}
 
 	// Verificar se a face do novo membro é a mesma de algum membro existente no grupo
 	for _, existingMember := range group.Members {
 		samePerson, err := cv.CompareFaces(newMember.Face, existingMember.Face)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if samePerson {
-			return errors.New("member with the same face already exists in the group")
+			return nil, errors.New("member with the same face already exists in the group")
 		}
 	}
 
@@ -112,7 +112,7 @@ func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName string
 	update := bson.M{"$push": bson.M{"members": newMember}}
 	_, err = r.collection.UpdateOne(ctx, bson.M{"name": groupName, "createdBy": createdBy}, update)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return newMember, nil
 }

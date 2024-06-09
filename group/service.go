@@ -3,6 +3,7 @@ package group
 import (
 	"context"
 	"errors"
+	"myproject/cv"
 	"time"
 
 	"github.com/google/uuid"
@@ -74,5 +75,50 @@ func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Cont
 	}
 
 	return group, nil
+
+}
+
+// POST /grupos/{nome-do-grupo}/detalhes/adicionar
+
+func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID string, req *AddMemberRequest) (*Member, error) {
+
+
+    faces, err := cv.CountFaces(req.Name)
+
+    if err != nil {
+
+        return nil, err
+
+	}
+
+	if faces == 0 {
+
+        return nil, errors.New("nenhuma face capturada")
+
+	}
+
+	if faces > 1 {
+
+        return nil, errors.New("mais de uma face capturada, tente ficar em um fundo neutro")
+
+	}
+
+	newMember := &Member{
+		ID: uuid.New().String(),
+		Name: req.Name,
+		Face: req.Face,
+		Attendance: 0,
+		AddedAt: time.Now().Format(time.RFC3339), 
+	}
+
+	memberAdded, err := s.repo.AddMemberToGroup(ctx, groupName, userID, newMember) 
+
+    if err != nil {
+
+        return nil, err
+
+	}
+
+	return memberAdded, nil
 
 }
