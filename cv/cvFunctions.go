@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math"
+    "strings"
 
 	"github.com/Kagami/go-face"
 )
@@ -100,4 +101,24 @@ func CompareFaces(base64Image1, base64Image2 string) (bool, error) {
 	isSamePerson := distance < threshold
 
 	return isSamePerson, nil
+}
+
+func IsBase64JPG(s string) bool {
+	// Verifica se a string começa com o prefixo base64 de uma imagem JPEG
+	if !strings.HasPrefix(s, "/9j/") {
+		return false
+	}
+
+	// Decodifica a string base64
+	data, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return false
+	}
+
+	// Verifica o cabeçalho JPEG (primeiros 3 bytes: 0xFF, 0xD8, 0xFF)
+	if len(data) < 3 || data[0] != 0xFF || data[1] != 0xD8 || data[2] != 0xFF {
+		return false
+	}
+
+	return true
 }

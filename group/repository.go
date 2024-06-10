@@ -2,7 +2,6 @@ package group
 
 import (
 	"context"
-	"errors"
 	"myproject/cv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -88,13 +87,13 @@ func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName, creat
 		return nil, err
 	}
 	if count > 0 {
-		return nil, errors.New("member with the same name already exists in the group")
+		return nil, ErrNameAlreadyExists
 	}
 
 	// Obter o grupo
 	group, found := r.FindOneByNameAndCreator(ctx, groupName, createdBy)
 	if !found {
-		return nil, errors.New("group not found")
+		return nil, ErrGroupNotFound
 	}
 
 	// Verificar se a face do novo membro é a mesma de algum membro existente no grupo
@@ -104,7 +103,7 @@ func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName, creat
 			return nil, err
 		}
 		if samePerson {
-			return nil, errors.New("member with the same face already exists in the group")
+			return nil, ErrFaceAlreadyUsed
 		}
 	}
 

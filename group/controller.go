@@ -3,6 +3,7 @@ package group
 import (
 	"encoding/json"
 	"errors"
+	"myproject/cv"
 	"myproject/utils"
 	"net/http"
 
@@ -124,3 +125,69 @@ func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Req
 		return
 	}
 }
+
+
+// POST grupos/{nome-do-grupo}/detalhes/adicionar
+
+func (c *GroupController) AddMemberToGroup(res http.ResponseWriter, req *http.Request) {
+
+    userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	var addMemberReq AddMemberRequest
+	if err := json.NewDecoder(req.Body).Decode(&addMemberReq); err != nil {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body Invalido")
+		return
+	}
+
+    if !cv.IsBase64JPG(addMemberReq.Face) {
+
+        utils.WriteErrorResponse(res, http.StatusBadRequest, "Face deve ser uma imagem .jpg na base 64")
+        return
+
+	}
+
+	addedMember, err := c.service.AddMemberToGroup(req.Context(), groupName, userId, &addMemberReq)
+
+    if errors.Is(err, ErrNoFaces) || errors.Is(err, ErrMoreThanOneFace) {
+
+        utils.WriteErrorResponse(res, http.StatusBadRequest, err.Error())
+        return
+
+	}
+
+	if errors.Is(err, ErrFaceAlreadyUsed) || errors.Is(err, ErrNameAlreadyExists) {
+
+        utils.WriteErrorResponse(res, http.StatusConflict, err.Error())
+        return
+
+	}
+   
+    if errors.Is(err, ErrGroupNotFound) {
+
+        utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+        return
+
+	}
+
+    if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusCreated)
+	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Membro adicionado com sucesso.",
+		"member":   addedMember,
+	})
+
+	if encodeErr != nil {
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
+		return
+	}
+}	

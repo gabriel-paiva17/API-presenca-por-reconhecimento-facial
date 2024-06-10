@@ -83,7 +83,7 @@ func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Cont
 func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID string, req *AddMemberRequest) (*Member, error) {
 
 
-    faces, err := cv.CountFaces(req.Name)
+    faces, err := cv.CountFaces(req.Face)
 
     if err != nil {
 
@@ -93,13 +93,13 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 
 	if faces == 0 {
 
-        return nil, errors.New("nenhuma face capturada")
+        return nil, ErrNoFaces
 
 	}
 
 	if faces > 1 {
 
-        return nil, errors.New("mais de uma face capturada, tente ficar em um fundo neutro")
+        return nil, ErrMoreThanOneFace
 
 	}
 
@@ -111,7 +111,7 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 		AddedAt: time.Now().Format(time.RFC3339), 
 	}
 
-	memberAdded, err := s.repo.AddMemberToGroup(ctx, groupName, userID, newMember) 
+	addedMember, err := s.repo.AddMemberToGroup(ctx, groupName, userID, newMember) 
 
     if err != nil {
 
@@ -119,6 +119,6 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 
 	}
 
-	return memberAdded, nil
+	return addedMember, nil
 
 }
