@@ -66,6 +66,7 @@ func CreateServer() {
 	r.HandleFunc("/grupos/criar", utils.CheckAuthenthentication()).Methods("GET")
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
+	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
 
 	// configurando server e CORS
 

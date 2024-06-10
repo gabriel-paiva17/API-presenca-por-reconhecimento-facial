@@ -1,13 +1,19 @@
 package main
 
-import (
+/*
+import (	
 	"fmt"
 	"myproject/cv"
 	"os"
 )
+*/
 
 func main() {
-
+	
+	CreateServer()
+	
+	// testing CV functions
+	/*
 	caminhoDoArquivo1 := "statics/lJames.txt"
 	caminhoDoArquivo2 := "statics/messi2.txt"
 
@@ -38,4 +44,5 @@ func main() {
 	r, err := cv.CompareFaces(base64image1, base64image2)
 
 	fmt.Printf("Resultado: %v,\nErro: %v", r, err)
+	*/
 }
