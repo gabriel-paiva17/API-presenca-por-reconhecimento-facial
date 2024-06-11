@@ -31,6 +31,7 @@ func CreateServer() {
 	mongoURI := os.Getenv("MONGO_URI")
 	secretKey := os.Getenv("SECRET_KEY")
 	serverAddr := os.Getenv("SERVER_ADDR")
+	dbName := os.Getenv("MONGO_DBNAME")
 
 	// conectando ao db
 
@@ -49,8 +50,8 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	userRepo := user.NewUserRepository(client, "web_presenca", "users")
-	groupRepo := group.NewGroupRepository(client, "web_presenca", "groups")
+	userRepo := user.NewUserRepository(client, dbName, "users")
+	groupRepo := group.NewGroupRepository(client, dbName, "groups")
 
 	userService := user.NewUserService(userRepo, secretKey)
 	groupService := group.NewGroupService(groupRepo)
