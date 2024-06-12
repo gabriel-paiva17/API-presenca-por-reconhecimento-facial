@@ -26,10 +26,19 @@ func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionR
 
 	}
 
+	var sessionMembers []SessionMember
+	
 	for _, m := range foundedGroup.Members {
 
+		sm := SessionMember{
+			ID: m.ID,
+			Name: m.Name,
+			Face: m.Face,
+			Attendance: 0,
+			WasFaceValidated: false,
+		}
 		
-		m.Attendance = 0
+		sessionMembers = append(sessionMembers, sm)
 
 	}
 
@@ -40,7 +49,7 @@ func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionR
 		StartedAt: time.Now().Format(time.RFC3339),
 		GroupName: req.GroupName,
 		CreatedBy: req.CreatedBy,
-		Members: foundedGroup.Members,
+		Members: sessionMembers,
 	}
 
 	err := s.repo.StartNewSession(ctx, newSession)

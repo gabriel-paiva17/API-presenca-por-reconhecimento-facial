@@ -2,7 +2,6 @@ package session
 
 import (
 	"errors"
-	"myproject/group"
 )
 
 type Session struct {
@@ -13,7 +12,15 @@ type Session struct {
 	EndedAt       string         `json:"endedAt,omitempty" bson:"endedAt,omitempty"`
 	GroupName     string         `json:"groupName" bson:"groupName"`
 	CreatedBy     string         `json:"createdBy" bson:"createdBy"`
-	Members       []group.Member `json:"members" bson:"members"`
+	Members       []SessionMember `json:"members" bson:"members"`
+}
+
+type SessionMember struct {
+	ID        			string 		`json:"id" bson:"_id"`
+	Name      			string 		`json:"name" bson:"name"`
+	Face       			string 		`json:"face" bson:"face"`
+	Attendance 			int    		`json:"attendance" bson:"attendance"`
+	WasFaceValidated	bool		`json:"wasFaceValidated" bson:"wasFaceValidated"`
 }
 
 // POST /grupos/{nome-do-grupo}/sessoes/iniciar
