@@ -13,8 +13,8 @@ type SessionService struct {
 	groupRepo *group.GroupRepository
 }
 
-func NewSessionService(repo *SessionRepository) *SessionService {
-	return &SessionService{repo: repo}
+func NewSessionService(repo *SessionRepository, groupRepo *group.GroupRepository) *SessionService {
+	return &SessionService{repo: repo, groupRepo: groupRepo}
 }
 
 func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionRequest) (*Session, error) {

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 	"myproject/group"
 	"myproject/user"
@@ -13,9 +11,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
+
 )
 
 func CreateServer() {
@@ -35,7 +31,7 @@ func CreateServer() {
 
 	// conectando ao db
 
-	client, ctx, cancel, err := connectDB(mongoURI)
+	client, ctx, cancel, err := utils.ConnectDB(mongoURI)
 	if err != nil {
 		log.Fatal("Failed to connect to MongoDB:", err)
 	}
@@ -82,28 +78,6 @@ func CreateServer() {
 
 	log.Fatal(s.ListenAndServe())
 
-}
-
-func connectDB(uri string) (*mongo.Client, context.Context, context.CancelFunc, error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-
-	clientOptions := options.Client().ApplyURI(uri)
-
-	client, err := mongo.Connect(ctx, clientOptions)
-	if err != nil {
-		cancel()
-		return nil, nil, nil, err
-	}
-
-	err = client.Ping(ctx, readpref.Primary())
-	if err != nil {
-		cancel()
-		return nil, nil, nil, err
-	}
-
-	fmt.Println("Conectado ao MongoDB!")
-	return client, ctx, cancel, nil
 }
 
 func configureCORS() func(http.Handler) http.Handler {
