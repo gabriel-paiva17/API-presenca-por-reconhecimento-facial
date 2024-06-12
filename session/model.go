@@ -1,6 +1,9 @@
 package session
 
-import "myproject/group"
+import (
+	"errors"
+	"myproject/group"
+)
 
 type Session struct {
 	ID            string         `json:"id" bson:"_id"`
@@ -13,6 +16,8 @@ type Session struct {
 	Members       []group.Member `json:"members" bson:"members"`
 }
 
+// POST /grupos/{nome-do-grupo}/sessoes/iniciar
+
 type StartSessionRequest struct {
 	ID            string `json:"id"`
 	Name          string `json:"name"`
@@ -21,3 +26,5 @@ type StartSessionRequest struct {
 	GroupName     string `json:"groupName"`
 	CreatedBy     string `json:"createdBy"`
 }
+
+var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")

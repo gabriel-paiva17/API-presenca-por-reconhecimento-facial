@@ -39,8 +39,20 @@ func (r *SessionRepository) FindOneSession(ctx context.Context, groupName string
 	return existingSession, true
 }
 
-func (r *SessionRepository) StartServer(ctx context.Context, session *Session) error {
+// POST /grupos/{nome-do-grupo}/sessoes/iniciar
 
-	return nil
+func (r *SessionRepository) StartNewSession(ctx context.Context, session *Session) error {
+
+	_, found := r.FindOneSession(ctx, session.GroupName, session.CreatedBy, session.Name)
+
+	if found {
+
+		return ErrSessionAlreadyExists
+
+	}
+
+	_, err := r.collection.InsertOne(ctx, session)
+
+	return err
 
 }
