@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -34,12 +33,12 @@ func GetAuthenticatedUserId(req *http.Request) (string, bool) {
 
 	jwtKey := []byte(os.Getenv("SECRET_KEY"))
 
-	authHeader := req.Header.Get("Authorization")
-	if authHeader == "" {
-		return "", false
-	}
+	cookie, err := req.Cookie("auth-token")
+    if err != nil {
+        return "", false
+    }
 
-	tokenString, _ := strings.CutPrefix(authHeader, "Bearer ")
+    tokenString := cookie.Value
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 

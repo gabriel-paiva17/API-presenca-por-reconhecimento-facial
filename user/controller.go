@@ -81,7 +81,7 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 		return
 	}
 
-	token, err := c.service.LoginUser(req.Context(), &loginReq)
+	err := c.service.LoginUser(req.Context(), &loginReq, res)
 
 	if err == ErrGeneratingToken {
 
@@ -96,8 +96,6 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 	}
 
 	res.Header().Set("Content-Type", "application/json")
-	res.Header().Set("Access-Control-Expose-Headers", "Authorization")
-	res.Header().Set("Authorization", "Bearer "+token)
 
 	res.WriteHeader(http.StatusOK)
 
@@ -114,13 +112,23 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Request) {
 
 	var response LogoutResponse
+    response.Date = time.Now().Format(time.RFC3339)
+    response.Message = "Logout realizado com sucesso!"
 
-	response.Date = time.Now().Format(time.RFC3339)
-	response.Message = "Logout realizado com sucesso!"
+    // Clear the authentication cookie
+    cookie := &http.Cookie{
+        Name:     "auth-token",
+        Value:    "",
+        Path: 	  "/",
+		Expires:  time.Unix(0, 0),
+        HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+        Secure:   true,
+    }
+    http.SetCookie(res, cookie)
 
-	res.Header().Set("Content-Type", "application/json")
-	res.WriteHeader(http.StatusOK)
-
-	json.NewEncoder(res).Encode(response)
+    res.Header().Set("Content-Type", "application/json")
+    res.WriteHeader(http.StatusOK)
+    json.NewEncoder(res).Encode(response)
 
 }

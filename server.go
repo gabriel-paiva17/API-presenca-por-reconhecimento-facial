@@ -91,5 +91,6 @@ func configureCORS() func(http.Handler) http.Handler {
 		handlers.AllowedOrigins([]string{"http://localhost:5173"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		handlers.AllowCredentials(),
 	)
 }

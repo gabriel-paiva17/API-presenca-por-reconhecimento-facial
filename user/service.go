@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"myproject/utils"
+	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -55,17 +56,17 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 // POST /auth/login //
 //////////////////////
 
-func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest) (string, error) {
+func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest, res http.ResponseWriter) error {
 
 	dbUser, found := s.repo.FindOneByEmail(ctx, req.Email)
 
 	if !found {
-		return "", fmt.Errorf("usuario nao existe")
+		return fmt.Errorf("usuario nao existe")
 	}
 
 	if !utils.IsHashEqualPassword(dbUser.Password, req.Password) {
 
-		return "", fmt.Errorf("senha invalida")
+		return fmt.Errorf("senha invalida")
 
 	}
 
@@ -78,9 +79,20 @@ func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest) (string,
 	// adicionando chave secreta a assinatura
 	tokenString, err := token.SignedString(s.jwtKey)
 	if err != nil {
-		return "", ErrGeneratingToken
+		return ErrGeneratingToken
 	}
 
-	return tokenString, nil
+	cookie := &http.Cookie{
+        Name:     "auth-token",
+        Value:    tokenString,
+		Path: "/",
+        Expires:  time.Now().Add(12 * time.Hour),
+        HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+        Secure:   true,
+    }
+    http.SetCookie(res, cookie)
+
+	return nil
 
 }
