@@ -34,6 +34,16 @@ type StartSessionRequest struct {
 	CreatedBy     string `json:"createdBy"`
 }
 
+type ValidateFaceRequest struct {
+
+	Face 		  string `json:"face"`
+	SessionName   string `json:"sessionName"`
+	GroupName     string `json:"groupName"`
+	CreatedBy     string `json:"createdBy"`
+
+}
+
 var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")
 var ErrGroupNotFound = errors.New("grupo nao encontrado")
 var ErrSessionNotFound = errors.New("sessao nao encontrada")
+var ErrFaceDoesntMatch = errors.New("face enviada nao corresponde a de nenhum membro do grupo")

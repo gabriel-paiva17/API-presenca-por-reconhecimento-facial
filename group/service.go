@@ -82,27 +82,14 @@ func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Cont
 
 func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID string, req *AddMemberRequest) (*Member, error) {
 
+	err := cv.CheckOnlyOneFace(req.Face)
 
-    faces, err := cv.CountFaces(req.Face)
+	if err != nil {
 
-    if err != nil {
-
-        return nil, err
-
-	}
-
-	if faces == 0 {
-
-        return nil, ErrNoFaces
+		return nil, err
 
 	}
-
-	if faces > 1 {
-
-        return nil, ErrMoreThanOneFace
-
-	}
-
+ 
 	newMember := &Member{
 		ID: uuid.New().String(),
 		Name: req.Name,

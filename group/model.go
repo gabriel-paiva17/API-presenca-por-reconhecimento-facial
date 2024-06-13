@@ -58,5 +58,3 @@ type AddMemberRequest struct {
 var ErrNameAlreadyExists = errors.New("name already used by you")
 var ErrGroupNotFound = errors.New("group not found")
 var ErrFaceAlreadyUsed = errors.New("member with the same face already exists in the group")
-var ErrNoFaces = errors.New("faces were not captured in the image")
-var ErrMoreThanOneFace = errors.New("mais de uma face capturada, tente ficar em um fundo neutro")

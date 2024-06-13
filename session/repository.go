@@ -57,8 +57,6 @@ func (r *SessionRepository) StartNewSession(ctx context.Context, session *Sessio
 
 }
 
-// PUT /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face
-
 func (r *SessionRepository) UpdateMembers(ctx context.Context, session *Session, newMembers []SessionMember) error {
 	// Cria o filtro para encontrar a sessão
 	filter := bson.M{

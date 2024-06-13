@@ -2,6 +2,7 @@ package session
 
 import (
 	"context"
+	"myproject/cv"
 	"myproject/group"
 	"time"
 
@@ -61,5 +62,69 @@ func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionR
 	}
 
 	return newSession, nil
+
+}
+
+// PUT /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face
+
+func (s *SessionService) ValidateFace(ctx context.Context, req *ValidateFaceRequest) error {
+
+	/* mover para controller posteriormente
+	if !cv.IsBase64JPG(req.Face) {
+
+		return 
+
+	}
+	*/
+
+	err := cv.CheckOnlyOneFace(req.Face)
+	if err != nil {
+
+		return err
+
+	}
+
+	session, found := s.sessionRepo.FindOneSession(ctx, req.GroupName, req.CreatedBy, req.SessionName)
+	if !found {
+
+		return ErrSessionNotFound
+
+	}
+
+
+	// caso a face seja encontrada, essa face é atribuida ao membro na sessao,
+	// e o membro ganha o maximo de presencas da sessao
+	faceValidated := false
+
+	for _, m := range session.Members {
+
+		sameFace, err  := cv.CompareFaces(m.Face, req.Face)
+
+		if err != nil {
+
+			return err
+
+		}
+		
+		if sameFace {
+
+			m.Face = req.Face
+			m.Attendance = session.MaxAttendance
+			m.WasFaceValidated = true
+			faceValidated = true
+			break
+		}
+
+	}
+
+	if !faceValidated {
+
+		return ErrFaceDoesntMatch
+
+	}
+
+	err = s.sessionRepo.UpdateMembers(ctx, session, session.Members)
+
+	return err
 
 }

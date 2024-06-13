@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
     "strings"
+	"errors"
 
 	"github.com/Kagami/go-face"
 )
@@ -49,6 +50,41 @@ func CountFaces(base64Image string) (int, error) {
 
 	return len(faces), nil
 }
+
+// Essa função pode retornar: 
+// nil,
+// um erro ao contar as faces,
+// erro por nao ter nenhuma face capturada,
+// ou erro por ter mais de uma face capturada
+func CheckOnlyOneFace(base64Image string) error {
+
+	faces, err := CountFaces(base64Image)
+
+    if err != nil {
+
+        return err
+
+	}
+
+	if faces == 0 {
+
+        return ErrNoFaces
+
+	}
+
+	if faces > 1 {
+
+        return ErrMoreThanOneFace
+
+	}
+	
+	return nil
+
+
+}
+
+var ErrNoFaces = errors.New("faces were not captured in the image")
+var ErrMoreThanOneFace = errors.New("mais de uma face capturada, tente ficar em um fundo neutro")
 
 // Calcula a distância euclidiana entre dois descritores faciais
 func euclideanDistance(descriptor1, descriptor2 face.Descriptor) float32 {

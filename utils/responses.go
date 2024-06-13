@@ -16,6 +16,7 @@ var errorMap = map[int]string{
 	http.StatusNotFound:            "Not Found",
 	http.StatusConflict:            "Conflict",
 	http.StatusInternalServerError: "Internal Server Error",
+	http.StatusUnsupportedMediaType:"Unsupported Media Type", 
 }
 
 func WriteErrorResponse(res http.ResponseWriter, statusCode int, Message string) {

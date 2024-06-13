@@ -134,14 +134,14 @@ func (c *GroupController) AddMemberToGroup(res http.ResponseWriter, req *http.Re
 
     if !cv.IsBase64JPG(addMemberReq.Face) {
 
-        utils.WriteErrorResponse(res, http.StatusBadRequest, "Face deve ser uma imagem .jpg na base 64")
+        utils.WriteErrorResponse(res, http.StatusUnsupportedMediaType, "Face deve ser uma imagem .jpg na base 64")
         return
 
 	}
 
 	addedMember, err := c.service.AddMemberToGroup(req.Context(), groupName, userId, &addMemberReq)
 
-    if errors.Is(err, ErrNoFaces) || errors.Is(err, ErrMoreThanOneFace) {
+    if errors.Is(err, cv.ErrNoFaces) || errors.Is(err, cv.ErrMoreThanOneFace) {
 
         utils.WriteErrorResponse(res, http.StatusBadRequest, err.Error())
         return
