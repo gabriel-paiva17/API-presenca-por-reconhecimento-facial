@@ -36,3 +36,4 @@ type StartSessionRequest struct {
 
 var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")
 var ErrGroupNotFound = errors.New("grupo nao encontrado")
+var ErrSessionNotFound = errors.New("sessao nao encontrada")

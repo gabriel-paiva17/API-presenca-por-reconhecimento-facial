@@ -40,10 +40,6 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-type LoginResponse struct {
-	Message string `json:"message"`
-}
-
 ///////////////////////
 // POST /auth/logout //
 ///////////////////////

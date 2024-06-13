@@ -47,12 +47,8 @@ func (c *GroupController) GetAllGroupsByUserID(res http.ResponseWriter, req *htt
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
 
-	encodeErr := json.NewEncoder(res).Encode(getGroupsResponse)
-	if encodeErr != nil {
-
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro Interno do Server")
-		return
-	}
+	json.NewEncoder(res).Encode(getGroupsResponse)
+	
 }
 
 // POST /grupos
@@ -93,15 +89,10 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
-	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+	json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Grupo criado com sucesso.",
 		"group":   response,
 	})
-
-	if encodeErr != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-		return
-	}
 
 }
 
@@ -119,11 +110,10 @@ func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Req
 		return
 	}
 
-	encodeErr := json.NewEncoder(res).Encode(group)
-	if encodeErr != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-		return
-	}
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(group)
+	
 }
 
 
@@ -181,13 +171,9 @@ func (c *GroupController) AddMemberToGroup(res http.ResponseWriter, req *http.Re
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
-	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+	json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Membro adicionado com sucesso.",
 		"member":   addedMember,
 	})
 
-	if encodeErr != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-		return
-	}
 }	

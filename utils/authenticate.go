@@ -80,13 +80,9 @@ func CheckAuthenthentication() func(res http.ResponseWriter, req *http.Request) 
 
 		res.Header().Set("Content-Type", "application/json")
 		res.WriteHeader(http.StatusOK)
-		encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+		json.NewEncoder(res).Encode(map[string]interface{}{
 			"message": "Usuário autenticado.",
 		})
-		if encodeErr != nil {
-
-			WriteErrorResponse(res, http.StatusInternalServerError, "Erro Interno do Server")
-			return
-		}
+		
 	})
 }

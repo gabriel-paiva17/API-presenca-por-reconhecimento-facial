@@ -62,13 +62,11 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 	// Serializa a resposta como JSON e envia
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
-	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+	json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Usuário criado com sucesso.",
 		"user":    createUserResponse,
 	})
-	if encodeErr != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-	}
+	
 }
 
 //////////////////////
@@ -103,11 +101,9 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 
 	res.WriteHeader(http.StatusOK)
 
-	response := LoginResponse{Message: "Login realizado com sucesso."}
-	if err := json.NewEncoder(res).Encode(response); err != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-		return
-	}
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Login realizado com sucesso.",
+	})
 
 }
 
@@ -125,9 +121,6 @@ func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Re
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
 
-	if err := json.NewEncoder(res).Encode(response); err != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-		return
-	}
+	json.NewEncoder(res).Encode(response)
 
 }

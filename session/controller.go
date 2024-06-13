@@ -60,12 +60,9 @@ func (c *SessionController) StartNewSession(res http.ResponseWriter, req *http.R
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
-	encodeErr := json.NewEncoder(res).Encode(map[string]interface{}{
+	json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Sessão iniciada com sucesso.",
 		"session": newSession,
 	})
-	if encodeErr != nil {
-		utils.WriteErrorResponse(res, http.StatusInternalServerError, "Erro ao codificar resposta.")
-	}	
 
 }

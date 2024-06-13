@@ -56,3 +56,25 @@ func (r *SessionRepository) StartNewSession(ctx context.Context, session *Sessio
 	return err
 
 }
+
+// PUT /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face
+
+func (r *SessionRepository) UpdateMembers(ctx context.Context, session *Session, newMembers []SessionMember) error {
+	// Cria o filtro para encontrar a sessão
+	filter := bson.M{
+		"groupName": session.GroupName,
+		"createdBy": session.CreatedBy,
+		"name":      session.Name,
+	}
+
+	// Define a atualização usando a operação $set
+	update := bson.M{
+		"$set": bson.M{
+			"members": newMembers,
+		},
+	}
+
+	_, err := r.collection.UpdateOne(ctx, filter, update)
+
+	return err
+}
