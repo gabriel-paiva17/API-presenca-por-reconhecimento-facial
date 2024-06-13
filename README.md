@@ -3,9 +3,9 @@ https://documenter.getpostman.com/view/34092137/2sA3QngYxU
 
 Não esquecer:
 
+- Criar uma funcao chamada update group, quando ela for chamada, a presença de cada aluno no grupo, sera atualizada para a soma de todas as presenças das sessões (é possível colocar essa função até na função que encontra um grupo especifico)
 - Implementar função para visualizar sessoes pendentes (isto é, iniciadas e nao finalizadas)
 - Implementar forma de verificar se a face foi validada ou nao durante a sessao (se foi, mostrar imagem capturada e adicionar presenças)
-
 
 Observações:
 

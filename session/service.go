@@ -9,12 +9,12 @@ import (
 )
 
 type SessionService struct {
-	repo *SessionRepository
+	sessionRepo *SessionRepository
 	groupRepo *group.GroupRepository
 }
 
-func NewSessionService(repo *SessionRepository, groupRepo *group.GroupRepository) *SessionService {
-	return &SessionService{repo: repo, groupRepo: groupRepo}
+func NewSessionService(sessionRepo *SessionRepository, groupRepo *group.GroupRepository) *SessionService {
+	return &SessionService{sessionRepo: sessionRepo, groupRepo: groupRepo}
 }
 
 func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionRequest) (*Session, error) {
@@ -52,7 +52,7 @@ func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionR
 		Members: sessionMembers,
 	}
 
-	err := s.repo.StartNewSession(ctx, newSession)
+	err := s.sessionRepo.StartNewSession(ctx, newSession)
 
 	if err != nil {
 		

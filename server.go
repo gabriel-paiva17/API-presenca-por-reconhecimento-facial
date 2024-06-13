@@ -5,6 +5,7 @@ import (
 	"myproject/group"
 	"myproject/user"
 	"myproject/utils"
+	"myproject/session"
 	"net/http"
 	"os"
 	"time"
@@ -48,12 +49,15 @@ func CreateServer() {
 
 	userRepo := user.NewUserRepository(client, dbName, "users")
 	groupRepo := group.NewGroupRepository(client, dbName, "groups")
+	sessionRepo := session.NewSessionRepository(client, dbName, "sessions")
 
 	userService := user.NewUserService(userRepo, secretKey)
 	groupService := group.NewGroupService(groupRepo)
+	sessionService := session.NewSessionService(sessionRepo, groupRepo)
 
 	userController := user.NewUserController(userService)
 	groupController := group.NewGroupController(groupService)
+	sessionController := session.NewSessionController(sessionService)
 
 	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
@@ -64,6 +68,8 @@ func CreateServer() {
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
+
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/iniciar", utils.Authenticate(sessionController.StartNewSession)).Methods("POST")
 
 	// configurando server e CORS
 
