@@ -88,8 +88,7 @@ func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest, res http
 		Path: "/",
         Expires:  time.Now().Add(12 * time.Hour),
         HttpOnly: true,
-		SameSite: http.SameSiteNoneMode,
-        Secure:   true,
+		SameSite: http.SameSiteLaxMode,
     }
     http.SetCookie(res, cookie)
 

@@ -122,8 +122,7 @@ func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Re
         Path: 	  "/",
 		Expires:  time.Unix(0, 0),
         HttpOnly: true,
-		SameSite: http.SameSiteNoneMode,
-        Secure:   true,
+		SameSite: http.SameSiteLaxMode,
     }
     http.SetCookie(res, cookie)
 
