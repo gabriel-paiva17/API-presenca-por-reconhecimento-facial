@@ -58,11 +58,10 @@ func (r *SessionRepository) StartNewSession(ctx context.Context, session *Sessio
 }
 
 func (r *SessionRepository) UpdateMembers(ctx context.Context, session *Session, newMembers []SessionMember) error {
+
 	// Cria o filtro para encontrar a sessão
 	filter := bson.M{
-		"groupName": session.GroupName,
-		"createdBy": session.CreatedBy,
-		"name":      session.Name,
+		"_id": session.ID,
 	}
 
 	// Define a atualização usando a operação $set

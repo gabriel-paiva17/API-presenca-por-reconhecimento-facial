@@ -34,6 +34,8 @@ type StartSessionRequest struct {
 	CreatedBy     string `json:"createdBy"`
 }
 
+// PUT /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+
 type ValidateFaceRequest struct {
 
 	Face 		  string `json:"face"`
@@ -47,3 +49,4 @@ var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em and
 var ErrGroupNotFound = errors.New("grupo nao encontrado")
 var ErrSessionNotFound = errors.New("sessao nao encontrada")
 var ErrFaceDoesntMatch = errors.New("face enviada nao corresponde a de nenhum membro do grupo")
+var ErrSessionHasEnded = errors.New("sessao ja foi finalizada")

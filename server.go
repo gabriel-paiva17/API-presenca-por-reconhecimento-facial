@@ -70,6 +70,10 @@ func CreateServer() {
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
 
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/iniciar", utils.Authenticate(sessionController.StartNewSession)).Methods("POST")
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face", utils.Authenticate(sessionController.ValidateFace)).Methods("POST")
+	// funcao de encerrar sessao
+	// funcao de mostrar todas as sessoes encerradas
+	// funcao de mostrar sessoes pendentes
 
 	// configurando server e CORS
 

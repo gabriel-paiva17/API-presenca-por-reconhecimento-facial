@@ -18,6 +18,8 @@ func NewSessionService(sessionRepo *SessionRepository, groupRepo *group.GroupRep
 	return &SessionService{sessionRepo: sessionRepo, groupRepo: groupRepo}
 }
 
+// POST /grupos/{nome-do-grupo}/sessoes/iniciar 
+
 func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionRequest) (*Session, error) {
 
 	foundedGroup, found := s.groupRepo.FindOneByNameAndCreator(ctx, req.GroupName, req.CreatedBy)
@@ -69,14 +71,6 @@ func (s *SessionService) StartNewSession(ctx context.Context, req *StartSessionR
 
 func (s *SessionService) ValidateFace(ctx context.Context, req *ValidateFaceRequest) error {
 
-	/* mover para controller posteriormente
-	if !cv.IsBase64JPG(req.Face) {
-
-		return 
-
-	}
-	*/
-
 	err := cv.CheckOnlyOneFace(req.Face)
 	if err != nil {
 
@@ -91,38 +85,38 @@ func (s *SessionService) ValidateFace(ctx context.Context, req *ValidateFaceRequ
 
 	}
 
+	if session.EndedAt != "" {
+
+		return ErrSessionHasEnded
+
+	}
+
 
 	// caso a face seja encontrada, essa face é atribuida ao membro na sessao,
 	// e o membro ganha o maximo de presencas da sessao
 	faceValidated := false
 
-	for _, m := range session.Members {
+	for i := range session.Members {
+        sameFace, err := cv.CompareFaces(session.Members[i].Face, req.Face)
+        if err != nil {
+            return err
+        }
 
-		sameFace, err  := cv.CompareFaces(m.Face, req.Face)
-
-		if err != nil {
-
-			return err
-
-		}
-		
-		if sameFace {
-
-			m.Face = req.Face
-			m.Attendance = session.MaxAttendance
-			m.WasFaceValidated = true
-			faceValidated = true
-			break
-		}
-
-	}
+        if sameFace {
+            session.Members[i].Face = req.Face
+            session.Members[i].Attendance = session.MaxAttendance
+            session.Members[i].WasFaceValidated = true
+            faceValidated = true
+            break
+        }
+    }
 
 	if !faceValidated {
 
 		return ErrFaceDoesntMatch
 
 	}
-
+	
 	err = s.sessionRepo.UpdateMembers(ctx, session, session.Members)
 
 	return err

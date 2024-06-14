@@ -17,6 +17,7 @@ var errorMap = map[int]string{
 	http.StatusConflict:            "Conflict",
 	http.StatusInternalServerError: "Internal Server Error",
 	http.StatusUnsupportedMediaType:"Unsupported Media Type", 
+	http.StatusUnprocessableEntity: "Unprocessable Entity",
 }
 
 func WriteErrorResponse(res http.ResponseWriter, statusCode int, Message string) {
