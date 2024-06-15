@@ -104,7 +104,6 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 		ID: uuid.New().String(),
 		Name: req.Name,
 		Face: req.Face,
-		Attendance: 0,
 		AddedAt: time.Now().Format(time.RFC3339), 
 	}
 
