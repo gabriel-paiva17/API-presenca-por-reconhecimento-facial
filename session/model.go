@@ -45,6 +45,16 @@ type ValidateFaceRequest struct {
 
 }
 
+// POST /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/encerrar
+
+type EndSessionRequest struct {
+
+	SessionName   string `json:"sessionName"`
+	GroupName     string `json:"groupName"`
+	CreatedBy     string `json:"createdBy"`
+
+}
+
 var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")
 var ErrGroupNotFound = errors.New("grupo nao encontrado")
 var ErrSessionNotFound = errors.New("sessao nao encontrada")

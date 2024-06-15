@@ -2,6 +2,7 @@ package session
 
 import (
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -73,5 +74,24 @@ func (r *SessionRepository) UpdateMembers(ctx context.Context, session *Session,
 
 	_, err := r.collection.UpdateOne(ctx, filter, update)
 
+	return err
+}
+
+// EndSession atualiza o campo EndedAt de uma sessão específica
+func (r *SessionRepository) EndSession(ctx context.Context, session *Session) error {
+	filter := bson.M{
+		"_id": session.ID,
+	}
+
+	// Defina a data e hora atual como o valor de EndedAt
+	endedAt := time.Now().Format(time.RFC3339)
+
+	update := bson.M{
+		"$set": bson.M{
+			"endedAt": endedAt,
+		},
+	}
+
+	_, err := r.collection.UpdateOne(ctx, filter, update)
 	return err
 }
