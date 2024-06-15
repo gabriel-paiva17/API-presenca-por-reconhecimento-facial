@@ -30,8 +30,13 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 		return
 	}
 
-	if !utils.IsValidEmail(createUserRequest.Email) {
-		utils.WriteErrorResponse(res, http.StatusBadRequest, "Email invalido.")
+	if createUserRequest.Username == "" {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Nome precisa ser preenchido.")
+		return
+	}
+
+	if len(createUserRequest.Password) < 8 {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Senha precisa ter no mínimo 8 caracteres.")
 		return
 	}
 
@@ -41,6 +46,13 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 		return
 	}
 
+
+	if !utils.IsValidEmail(createUserRequest.Email) {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Email invalido.")
+		return
+	}
+
+	
 	createUserRequest.Password = hashedPassword
 
 	ctx := req.Context()
