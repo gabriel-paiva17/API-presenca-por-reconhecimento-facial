@@ -37,6 +37,25 @@ func (r *UserRepository) FindOneByEmail(ctx context.Context, email string) (*Use
 
 }
 
+func (r *UserRepository) FindOneByID(ctx context.Context, userID string) (*User, bool) {
+
+	filter := bson.M{"_id": userID}
+	existingUser := &User{}
+
+	// caso nao tenha erro, significa que a busca funcionou e existe
+	// um user cadastrado com esse email
+	err := r.collection.FindOne(ctx, filter).Decode(existingUser)
+
+	if err != nil {
+
+		return nil, false
+
+	}
+
+	return existingUser, true
+
+}
+
 /////////////////////////
 // POST /auth/register //
 /////////////////////////

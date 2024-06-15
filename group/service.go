@@ -4,24 +4,26 @@ import (
 	"context"
 	"errors"
 	"myproject/cv"
+	"myproject/user"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type GroupService struct {
-	repo *GroupRepository
+	groupRepo *GroupRepository
+	userRepo *user.UserRepository
 }
 
-func NewGroupService(repo *GroupRepository) *GroupService {
-	return &GroupService{repo: repo}
+func NewGroupService(groupRepo *GroupRepository, userRepo *user.UserRepository) *GroupService {
+	return &GroupService{groupRepo:  groupRepo, userRepo: userRepo}
 }
 
 // GET /grupos
 
 func (s *GroupService) GetGroups(userID string, ctx context.Context) ([]GroupByName, error) {
 
-	groups, err := s.repo.FindAllGroupsByUserID(userID, ctx)
+	groups, err := s.groupRepo.FindAllGroupsByUserID(userID, ctx)
 
 	if err != nil {
 
@@ -45,6 +47,14 @@ func (s *GroupService) GetGroups(userID string, ctx context.Context) ([]GroupByN
 
 func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest) (*Group, error) {
 
+	_, found := s.userRepo.FindOneByID(ctx, req.CreatedBy)
+
+	if !found {
+
+		return nil, ErrUserNotFound
+
+	}
+
 	group := &Group{
 		ID:        uuid.New().String(),
 		Name:      req.Name,
@@ -53,7 +63,7 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 		CreatedBy: req.CreatedBy,
 	}
 
-	err := s.repo.CreateGroup(ctx, group)
+	err := s.groupRepo.CreateGroup(ctx, group)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +76,7 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 
 func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Context) (*Group, error) {
 
-	group, ok := s.repo.FindOneByNameAndCreator(ctx, groupName, userId)
+	group, ok := s.groupRepo.FindOneByNameAndCreator(ctx, groupName, userId)
 
 	if !ok {
 
@@ -98,7 +108,7 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 		AddedAt: time.Now().Format(time.RFC3339), 
 	}
 
-	addedMember, err := s.repo.AddMemberToGroup(ctx, groupName, userID, newMember) 
+	addedMember, err := s.groupRepo.AddMemberToGroup(ctx, groupName, userID, newMember) 
 
     if err != nil {
 

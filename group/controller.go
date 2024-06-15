@@ -68,6 +68,14 @@ func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.
 	ctx := req.Context()
 	group, err := c.service.CreateGroup(ctx, &createGroupReq)
 
+	// garantindo que nao seja criado um grupo para um usuario que nao existe mais
+	if errors.Is(err, ErrUserNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+		return
+
+	}
+
 	if errors.Is(err, ErrNameAlreadyExists) {
 
 		utils.WriteErrorResponse(res, http.StatusConflict, "Nome ja utilizado por voce.")

@@ -58,3 +58,4 @@ type AddMemberRequest struct {
 var ErrNameAlreadyExists = errors.New("name already used by you")
 var ErrGroupNotFound = errors.New("group not found")
 var ErrFaceAlreadyUsed = errors.New("member with the same face already exists in the group")
+var ErrUserNotFound = errors.New("user not found")

@@ -52,7 +52,7 @@ func CreateServer() {
 	sessionRepo := session.NewSessionRepository(client, dbName, "sessions")
 
 	userService := user.NewUserService(userRepo, secretKey)
-	groupService := group.NewGroupService(groupRepo)
+	groupService := group.NewGroupService(groupRepo, userRepo)
 	sessionService := session.NewSessionService(sessionRepo, groupRepo)
 
 	userController := user.NewUserController(userService)
