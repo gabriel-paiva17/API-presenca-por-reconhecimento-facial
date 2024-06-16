@@ -9,7 +9,7 @@ type Session struct {
 	Name          string         `json:"name" bson:"name"`
 	MaxAttendance int            `json:"maxAttendance" bson:"maxAttendance"`
 	StartedAt     string         `json:"startedAt" bson:"startedAt"`
-	EndedAt       string         `json:"endedAt,omitempty" bson:"endedAt,omitempty"`
+	EndedAt       string         `json:"endedAt" bson:"endedAt"`
 	GroupName     string         `json:"groupName" bson:"groupName"`
 	CreatedBy     string         `json:"createdBy" bson:"createdBy"`
 	Members       []SessionMember `json:"members" bson:"members"`

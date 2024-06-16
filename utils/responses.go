@@ -13,6 +13,7 @@ type ErrorResponse struct {
 var errorMap = map[int]string{
 	http.StatusBadRequest:          "Bad Request",
 	http.StatusUnauthorized:        "Unauthorized",
+	http.StatusForbidden:			"Forbidden",
 	http.StatusNotFound:            "Not Found",
 	http.StatusConflict:            "Conflict",
 	http.StatusInternalServerError: "Internal Server Error",

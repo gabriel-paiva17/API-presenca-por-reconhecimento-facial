@@ -72,6 +72,7 @@ func GetAuthenticatedUserId(req *http.Request) (string, bool) {
 
 }
 
+// NOT WORKING.
 // function that only guarantees the user authentication
 func CheckAuthenthentication() func(res http.ResponseWriter, req *http.Request) {
 

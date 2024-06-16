@@ -138,17 +138,44 @@ func (c *SessionController) ValidateFace(res http.ResponseWriter, req *http.Requ
 
 }
 
-/*
 // POST /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/encerrar
 func (c *SessionController) EndSession(res http.ResponseWriter, req *http.Request) {
 
-	var endSessionRequest EndSessionRequest
-	if err := json.NewDecoder(req.Body).Decode(&endSessionRequest); err != nil {
-		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body Invalido")
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+	sessionName := vars["nome-da-sessao"]
+
+	endSessionRequest := EndSessionRequest{
+		SessionName: sessionName,
+    	GroupName: groupName,
+		CreatedBy: userId, 
+	}
+
+	err := c.service.EndSession(req.Context(), &endSessionRequest)
+
+	if errors.Is(err, ErrSessionNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+        return
+
+	}
+
+	if errors.Is(err, ErrSessionHasEnded) {
+		utils.WriteErrorResponse(res, http.StatusForbidden, err.Error())
+        return
+	}
+
+	if err != nil {
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Sessão encerrada.",
+	})
 
-
-
-}*/
+}

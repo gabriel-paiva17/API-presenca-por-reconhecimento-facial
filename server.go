@@ -64,16 +64,16 @@ func CreateServer() {
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUserHandler)).Methods("POST")
 
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
-	r.HandleFunc("/grupos/criar", utils.CheckAuthenthentication()).Methods("GET")
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
 
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/iniciar", utils.Authenticate(sessionController.StartNewSession)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face", utils.Authenticate(sessionController.ValidateFace)).Methods("PUT")
-	// funcao de encerrar sessao
-	// funcao de mostrar todas as sessoes encerradas
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/encerrar", utils.Authenticate(sessionController.EndSession)).Methods("POST")
 	// funcao de mostrar sessoes pendentes
+	// funcao de mostrar todas as sessoes encerradas
+	// funcao de mostrar uma sessao encerrada especifica
 
 	// configurando server e CORS
 
