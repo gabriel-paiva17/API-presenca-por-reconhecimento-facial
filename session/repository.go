@@ -83,12 +83,10 @@ func (r *SessionRepository) EndSession(ctx context.Context, session *Session) er
 		"_id": session.ID,
 	}
 
-	// Defina a data e hora atual como o valor de EndedAt
-	endedAt := time.Now().Format(time.RFC3339)
 
 	update := bson.M{
 		"$set": bson.M{
-			"endedAt": endedAt,
+			"endedAt": time.Now().Format(time.RFC3339),
 		},
 	}
 

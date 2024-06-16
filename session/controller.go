@@ -137,3 +137,18 @@ func (c *SessionController) ValidateFace(res http.ResponseWriter, req *http.Requ
 	})
 
 }
+
+/*
+// POST /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/encerrar
+func (c *SessionController) EndSession(res http.ResponseWriter, req *http.Request) {
+
+	var endSessionRequest EndSessionRequest
+	if err := json.NewDecoder(req.Body).Decode(&endSessionRequest); err != nil {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body Invalido")
+		return
+	}
+
+
+
+
+}*/

@@ -122,3 +122,41 @@ func (s *SessionService) ValidateFace(ctx context.Context, req *ValidateFaceRequ
 	return err
 
 }
+
+func (s *SessionService) EndSession(ctx context.Context, req *EndSessionRequest) error {
+
+	session, found := s.sessionRepo.FindOneSession(ctx, req.GroupName, req.CreatedBy, req.SessionName)
+	if !found {
+
+		return ErrSessionNotFound
+
+	}
+
+	if session.EndedAt != "" {
+
+		return ErrSessionHasEnded
+
+	}
+
+	for i := range session.Members {
+
+		if !session.Members[i].WasFaceValidated {
+
+			session.Members[i].Face = ""
+
+		}
+
+	}
+
+	err := s.sessionRepo.UpdateMembers(ctx, session, session.Members)
+	if err != nil {
+
+		return err
+
+	}
+
+	endErr := s.sessionRepo.EndSession(ctx, session)
+
+	return endErr
+
+}
