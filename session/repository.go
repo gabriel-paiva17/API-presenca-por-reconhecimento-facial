@@ -93,3 +93,48 @@ func (r *SessionRepository) EndSession(ctx context.Context, session *Session) er
 	_, err := r.collection.UpdateOne(ctx, filter, update)
 	return err
 }
+
+// GET /grupos/{nome-do-grupo}/sessoes/finalizadas
+// e 
+// GET /grupos/{nome-do-grupo}/sessoes/em-andamento
+
+func (r *SessionRepository) findAllWithFilter(ctx context.Context, filter bson.M) (*GetManySessionsResponse, error) {
+    cursor, err := r.collection.Find(ctx, filter)
+    if err != nil {
+        return nil, err
+    }
+    defer cursor.Close(ctx)
+
+    var sessions []SessionByName
+    for cursor.Next(ctx) {
+        var session Session
+        if err := cursor.Decode(&session); err != nil {
+            return nil, err
+        }
+        sessions = append(sessions, SessionByName{Name: session.Name})
+    }
+
+    if err := cursor.Err(); err != nil {
+        return nil, err
+    }
+
+    return &GetManySessionsResponse{Sessions: sessions}, nil
+}
+
+func (r *SessionRepository) FindAllActiveSessions(ctx context.Context, groupName string, userID string) (*GetManySessionsResponse, error) {
+    filter := bson.M{
+        "groupName": groupName,
+        "createdBy": userID,
+        "endedAt":   bson.M{"$eq": ""},
+    }
+    return r.findAllWithFilter(ctx, filter)
+}
+
+func (r *SessionRepository) FindAllEndedSessions(ctx context.Context, groupName string, userID string) (*GetManySessionsResponse, error) {
+    filter := bson.M{
+        "groupName": groupName,
+        "createdBy": userID,
+        "endedAt":   bson.M{"$ne": ""},
+    }
+    return r.findAllWithFilter(ctx, filter)
+}

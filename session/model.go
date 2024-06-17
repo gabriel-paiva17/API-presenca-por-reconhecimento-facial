@@ -55,6 +55,9 @@ type EndSessionRequest struct {
 
 }
 
+// GET /grupos/{nome-do-grupo}/sessoes/finalizadas
+// e 
+// GET /grupos/{nome-do-grupo}/sessoes/em-andamento
 
 type GetManySessionsResponse struct {
 	Sessions []SessionByName `json:"sessions"`
