@@ -241,3 +241,33 @@ func (c *SessionController) GetEndedSessions(res http.ResponseWriter, req *http.
 	json.NewEncoder(res).Encode(response)
 
 }
+
+// GET /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes 
+
+func (c *SessionController) GetSessionDetails(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+	sessionName := vars["nome-da-sessao"]
+
+	session, found := c.service.sessionRepo.FindOneSession(req.Context(), groupName, userId, sessionName)
+
+	if !found {
+		utils.WriteErrorResponse(res, http.StatusNotFound, "Sessão não foi encontrada.")
+		return
+	}
+
+	if session.EndedAt == "" {
+
+		utils.WriteErrorResponse(res, http.StatusConflict, "Sessão não foi finalizada.")
+		return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(session)
+
+}
