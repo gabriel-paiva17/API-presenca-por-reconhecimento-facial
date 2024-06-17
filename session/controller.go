@@ -179,3 +179,65 @@ func (c *SessionController) EndSession(res http.ResponseWriter, req *http.Reques
 	})
 
 }
+
+// GET /grupos/{nome-do-grupo}/sessoes/finalizadas
+
+func (c *SessionController) GetActiveSessions(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	response, err := c.service.sessionRepo.FindAllActiveSessions(req.Context(), groupName, userId)
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
+	}
+
+	if len(response.Sessions) == 0 {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, "Nenhuma sessão foi encontrada.")
+		return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(response)
+
+}
+
+// GET /grupos/{nome-do-grupo}/sessoes/em-andamento
+
+func (c *SessionController) GetEndedSessions(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	response, err := c.service.sessionRepo.FindAllEndedSessions(req.Context(), groupName, userId)
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
+	}
+
+	if len(response.Sessions) == 0 {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, "Nenhuma sessão foi encontrada.")
+		return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(response)
+
+}
