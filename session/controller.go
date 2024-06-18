@@ -303,3 +303,45 @@ func (c *SessionController) DeleteOneSession(res http.ResponseWriter, req *http.
 		"message": "Sessão deletada",
 	})
 }
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento
+
+func (c *SessionController) DeleteAllActiveSessions(res http.ResponseWriter, req *http.Request) {
+    userId, _ := utils.GetAuthenticatedUserId(req)
+
+    vars := mux.Vars(req)
+    groupName := vars["nome-do-grupo"]
+
+    err := c.service.sessionRepo.DeleteAllActiveSessions(req.Context(), groupName, userId)
+    if err != nil {
+        utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+    }
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Sessões em andamento deletadas",
+	})
+}
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/encerradas
+
+func (c *SessionController) DeleteAllEndedSessions(res http.ResponseWriter, req *http.Request) {
+    userId, _ := utils.GetAuthenticatedUserId(req)
+
+    vars := mux.Vars(req)
+    groupName := vars["nome-do-grupo"]
+
+    err := c.service.sessionRepo.DeleteAllEndedSessions(req.Context(), groupName, userId)
+    if err != nil {
+        utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+    }
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Sessões encerradas deletadas",
+	})
+}
