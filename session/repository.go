@@ -94,7 +94,7 @@ func (r *SessionRepository) EndSession(ctx context.Context, session *Session) er
 	return err
 }
 
-// GET /grupos/{nome-do-grupo}/sessoes/finalizadas
+// GET /grupos/{nome-do-grupo}/sessoes/encerradas
 // e 
 // GET /grupos/{nome-do-grupo}/sessoes/em-andamento
 
@@ -148,5 +148,29 @@ func (r *SessionRepository) DeleteOneSession(ctx context.Context, groupName, cre
         "name": sessionName,
     }
     _, err := r.collection.DeleteOne(ctx, filter)
+    return err
+}
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/encerradas
+// e 
+// DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento
+
+func (r *SessionRepository) DeleteAllActiveSessions(ctx context.Context, groupName, userID string) error {
+    filter := bson.M{
+        "groupName": groupName,
+        "createdBy": userID,
+        "endedAt":   bson.M{"$eq": ""},
+    }
+    _, err := r.collection.DeleteMany(ctx, filter)
+    return err
+}
+
+func (r *SessionRepository) DeleteAllEndedSessions(ctx context.Context, groupName, userID string) error {
+    filter := bson.M{
+        "groupName": groupName,
+        "createdBy": userID,
+        "endedAt":   bson.M{"$ne": ""},
+    }
+    _, err := r.collection.DeleteMany(ctx, filter)
     return err
 }

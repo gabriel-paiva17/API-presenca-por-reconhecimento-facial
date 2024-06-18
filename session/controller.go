@@ -180,7 +180,7 @@ func (c *SessionController) EndSession(res http.ResponseWriter, req *http.Reques
 
 }
 
-// GET /grupos/{nome-do-grupo}/sessoes/finalizadas
+// GET /grupos/{nome-do-grupo}/sessoes/encerradas
 
 func (c *SessionController) GetActiveSessions(res http.ResponseWriter, req *http.Request) {
 
