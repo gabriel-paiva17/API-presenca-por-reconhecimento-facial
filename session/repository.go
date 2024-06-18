@@ -143,9 +143,9 @@ func (r *SessionRepository) FindAllEndedSessions(ctx context.Context, groupName 
 
 func (r *SessionRepository) DeleteOneSession(ctx context.Context, groupName, createdBy, sessionName string) error {
     filter := bson.M{
-        "group_name":  groupName,
-        "created_by":  createdBy,
-        "session_name": sessionName,
+        "groupName":  groupName,
+        "createdBy":  createdBy,
+        "name": sessionName,
     }
     _, err := r.collection.DeleteOne(ctx, filter)
     return err

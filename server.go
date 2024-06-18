@@ -74,6 +74,7 @@ func CreateServer() {
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/em-andamento", utils.Authenticate(sessionController.GetActiveSessions)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas", utils.Authenticate(sessionController.GetEndedSessions)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes", utils.Authenticate(sessionController.GetSessionDetails)).Methods("GET")
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}", utils.Authenticate(sessionController.DeleteOneSession)).Methods("DELETE")
 
 	// configurando server e CORS
 

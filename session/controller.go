@@ -271,3 +271,35 @@ func (c *SessionController) GetSessionDetails(res http.ResponseWriter, req *http
 	json.NewEncoder(res).Encode(session)
 
 }
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+
+func (c *SessionController) DeleteOneSession(res http.ResponseWriter, req *http.Request) {
+   
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+    vars := mux.Vars(req)
+    groupName := vars["nome-do-grupo"]
+    sessionName := vars["nome-da-sessao"]
+
+    err := c.service.DeleteOneSession(req.Context(), groupName, userId, sessionName)
+   
+	if errors.Is(err, ErrSessionNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+		return
+	}
+	
+	if err != nil {
+        
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
+    }
+
+    res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Sessão deletada",
+	})
+}
