@@ -138,3 +138,15 @@ func (r *SessionRepository) FindAllEndedSessions(ctx context.Context, groupName 
     }
     return r.findAllWithFilter(ctx, filter)
 }
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+
+func (r *SessionRepository) DeleteSession(ctx context.Context, groupName, createdBy, sessionName string) error {
+    filter := bson.M{
+        "group_name":  groupName,
+        "created_by":  createdBy,
+        "session_name": sessionName,
+    }
+    _, err := r.collection.DeleteOne(ctx, filter)
+    return err
+}
