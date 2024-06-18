@@ -116,10 +116,8 @@ func (s *SessionService) ValidateFace(ctx context.Context, req *ValidateFaceRequ
 		return ErrFaceDoesntMatch
 
 	}
-	
-	err = s.sessionRepo.UpdateMembers(ctx, session, session.Members)
 
-	return err
+	return s.sessionRepo.UpdateMembers(ctx, session, session.Members)
 
 }
 
@@ -155,8 +153,18 @@ func (s *SessionService) EndSession(ctx context.Context, req *EndSessionRequest)
 
 	}
 
-	endErr := s.sessionRepo.EndSession(ctx, session)
+	return s.sessionRepo.EndSession(ctx, session)
 
-	return endErr
+}
+
+// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+
+func (s *SessionService) DeleteOneSession(ctx context.Context, groupName, createdBy, sessionName string) error {
+    _, found := s.sessionRepo.FindOneSession(ctx, groupName, createdBy, sessionName)
+    if !found {
+        return ErrSessionNotFound
+    }
+  
+	return 	s.sessionRepo.DeleteOneSession(ctx, groupName, createdBy, sessionName)
 
 }
