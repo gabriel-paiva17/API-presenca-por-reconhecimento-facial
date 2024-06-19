@@ -155,7 +155,7 @@ func (r *SessionRepository) DeleteOneSession(ctx context.Context, groupName, cre
 // e 
 // DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento
 
-func (r *SessionRepository) DeleteAllActiveSessions(ctx context.Context, groupName, userID string) error {
+func (r *SessionRepository) DeleteAllActiveSessionsOfAGroup(ctx context.Context, groupName, userID string) error {
     filter := bson.M{
         "groupName": groupName,
         "createdBy": userID,
@@ -165,7 +165,7 @@ func (r *SessionRepository) DeleteAllActiveSessions(ctx context.Context, groupNa
     return err
 }
 
-func (r *SessionRepository) DeleteAllEndedSessions(ctx context.Context, groupName, userID string) error {
+func (r *SessionRepository) DeleteAllEndedSessionsOfAGroup(ctx context.Context, groupName, userID string) error {
     filter := bson.M{
         "groupName": groupName,
         "createdBy": userID,

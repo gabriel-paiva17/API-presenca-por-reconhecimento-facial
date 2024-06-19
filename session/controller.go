@@ -28,6 +28,13 @@ func (c *SessionController) StartNewSession(res http.ResponseWriter, req *http.R
 		return
 	}
 
+	if startSessionRequest.MaxAttendance < 0 {
+
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Presença Máxima não pode ser negativa.")
+		return
+
+	}
+
 	userID, _ := utils.GetAuthenticatedUserId(req)
 	startSessionRequest.CreatedBy = userID
 
@@ -306,13 +313,13 @@ func (c *SessionController) DeleteOneSession(res http.ResponseWriter, req *http.
 
 // DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento
 
-func (c *SessionController) DeleteAllActiveSessions(res http.ResponseWriter, req *http.Request) {
+func (c *SessionController) DeleteAllActiveSessionsOfAGroup(res http.ResponseWriter, req *http.Request) {
     userId, _ := utils.GetAuthenticatedUserId(req)
 
     vars := mux.Vars(req)
     groupName := vars["nome-do-grupo"]
 
-    err := c.service.sessionRepo.DeleteAllActiveSessions(req.Context(), groupName, userId)
+    err := c.service.sessionRepo.DeleteAllActiveSessionsOfAGroup(req.Context(), groupName, userId)
     if err != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
         return
@@ -327,13 +334,13 @@ func (c *SessionController) DeleteAllActiveSessions(res http.ResponseWriter, req
 
 // DELETE /grupos/{nome-do-grupo}/sessoes/encerradas
 
-func (c *SessionController) DeleteAllEndedSessions(res http.ResponseWriter, req *http.Request) {
+func (c *SessionController) DeleteAllEndedSessionsOfAGroup(res http.ResponseWriter, req *http.Request) {
     userId, _ := utils.GetAuthenticatedUserId(req)
 
     vars := mux.Vars(req)
     groupName := vars["nome-do-grupo"]
 
-    err := c.service.sessionRepo.DeleteAllEndedSessions(req.Context(), groupName, userId)
+    err := c.service.sessionRepo.DeleteAllEndedSessionsOfAGroup(req.Context(), groupName, userId)
     if err != nil {
         utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
         return
