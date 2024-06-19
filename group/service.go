@@ -118,3 +118,35 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 	return addedMember, nil
 
 }
+
+// DELETE /grupos/{nome-do-grupo}/deletar
+
+func (s *GroupService) DeleteOneGroup(ctx context.Context, groupName, createdBy string) error {
+
+	return nil
+
+	/*
+	_, found := s.groupRepo.FindOneByNameAndCreator(ctx, groupName, createdBy)
+	if !found {
+
+		return ErrGroupNotFound
+
+	}
+
+	err := s.sessionRepo.DeleteAllActiveSessionsOfAGroup(ctx, groupName, createdBy)
+	if err != nil {
+
+		return err
+
+	}
+
+	err = s.sessionRepo.DeleteAllEndedSessionsOfAGroup(ctx, groupName, createdBy)
+	if err != nil {
+
+		return err
+
+	}
+
+	return s.groupRepo.DeleteOneGroup(ctx, groupName, createdBy)*/
+
+}

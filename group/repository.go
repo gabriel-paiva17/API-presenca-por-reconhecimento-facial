@@ -115,3 +115,13 @@ func (r *GroupRepository) AddMemberToGroup(ctx context.Context, groupName, creat
 	}
 	return newMember, nil
 }
+
+// DELETE /grupos/{nome-do-grupo}/deletar
+
+func (r *GroupRepository) DeleteOneGroup(ctx context.Context, groupName string, createdBy string) error {
+
+    filter := bson.M{"name": groupName, "createdBy": createdBy}
+
+    _, err := r.collection.DeleteOne(ctx, filter)
+    return err
+}
