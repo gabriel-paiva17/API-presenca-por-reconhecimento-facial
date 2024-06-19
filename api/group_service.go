@@ -1,4 +1,5 @@
-package handler
+package api
+
 import (
 	"context"
 	"errors"
@@ -11,10 +12,11 @@ import (
 type GroupService struct {
 	groupRepo *GroupRepository
 	userRepo *UserRepository
+	sessionRepo *SessionRepository
 }
 
-func NewGroupService(groupRepo *GroupRepository, userRepo *UserRepository) *GroupService {
-	return &GroupService{groupRepo:  groupRepo, userRepo: userRepo}
+func NewGroupService(groupRepo *GroupRepository, userRepo *UserRepository, sessionRepo *SessionRepository) *GroupService {
+	return &GroupService{groupRepo:  groupRepo, userRepo: userRepo, sessionRepo: sessionRepo}
 }
 
 // GET /grupos
@@ -121,9 +123,6 @@ func (s *GroupService) AddMemberToGroup(ctx context.Context, groupName, userID s
 
 func (s *GroupService) DeleteOneGroup(ctx context.Context, groupName, createdBy string) error {
 
-	return nil
-
-	/*
 	_, found := s.groupRepo.FindOneByNameAndCreator(ctx, groupName, createdBy)
 	if !found {
 
@@ -145,6 +144,6 @@ func (s *GroupService) DeleteOneGroup(ctx context.Context, groupName, createdBy 
 
 	}
 
-	return s.groupRepo.DeleteOneGroup(ctx, groupName, createdBy)*/
+	return s.groupRepo.DeleteOneGroup(ctx, groupName, createdBy)
 
 }

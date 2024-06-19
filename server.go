@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"myproject/handler"
+	"myproject/api"
 	"myproject/utils"
 	"net/http"
 	"os"
@@ -45,24 +45,24 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	userRepo := handler.NewUserRepository(client, dbName, "users")
-	groupRepo := handler.NewGroupRepository(client, dbName, "groups")
-	sessionRepo := handler.NewSessionRepository(client, dbName, "sessions")
+	userRepo := api.NewUserRepository(client, dbName, "users")
+	groupRepo := api.NewGroupRepository(client, dbName, "groups")
+	sessionRepo := api.NewSessionRepository(client, dbName, "sessions")
 
-	userService := handler.NewUserService(userRepo, secretKey)
-	groupService := handler.NewGroupService(groupRepo, userRepo)
-	sessionService := handler.NewSessionService(sessionRepo, groupRepo)
+	userService := api.NewUserService(userRepo, secretKey)
+	groupService := api.NewGroupService(groupRepo, userRepo, sessionRepo)
+	sessionService := api.NewSessionService(sessionRepo, groupRepo)
 
-	userController := handler.NewUserController(userService)
-	groupController := handler.NewGroupController(groupService)
-	sessionController := handler.NewSessionController(sessionService)
+	userController := api.NewUserController(userService)
+	groupController := api.NewGroupController(groupService)
+	sessionController := api.NewSessionController(sessionService)
 
 	r.HandleFunc("/auth/register", userController.CreateUser).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUser).Methods("POST")
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUser)).Methods("POST")
 
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
-	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")
+	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroup)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
 

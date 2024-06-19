@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"encoding/json"
@@ -53,7 +53,7 @@ func (c *GroupController) GetAllGroupsByUserID(res http.ResponseWriter, req *htt
 
 // POST /grupos
 
-func (c *GroupController) CreateGroupHandler(res http.ResponseWriter, req *http.Request) {
+func (c *GroupController) CreateGroup(res http.ResponseWriter, req *http.Request) {
 
 	var createGroupReq CreateGroupRequest
 	if err := json.NewDecoder(req.Body).Decode(&createGroupReq); err != nil {
