@@ -40,6 +40,14 @@ func (r *SessionRepository) FindOneSession(ctx context.Context, groupName string
 	return existingSession, true
 }
 
+func (r *GroupRepository) DeleteAllSessionsFromUser(ctx context.Context, createdBy string) error {
+
+    filter := bson.M{"createdBy": createdBy}
+
+    _, err := r.collection.DeleteMany(ctx, filter)
+    return err
+}
+
 // POST /grupos/{nome-do-grupo}/sessoes/iniciar
 
 func (r *SessionRepository) StartNewSession(ctx context.Context, session *Session) error {

@@ -125,3 +125,13 @@ func (r *GroupRepository) DeleteOneGroup(ctx context.Context, groupName string, 
     _, err := r.collection.DeleteOne(ctx, filter)
     return err
 }
+
+// DELETE /grupos/deletar
+
+func (r *GroupRepository) DeleteAllGroupsFromUser(ctx context.Context, createdBy string) error {
+
+    filter := bson.M{"createdBy": createdBy}
+
+    _, err := r.collection.DeleteMany(ctx, filter)
+    return err
+}

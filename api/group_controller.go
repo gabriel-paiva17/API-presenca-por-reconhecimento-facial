@@ -214,7 +214,7 @@ func (c *GroupController) DeleteOneGroup(res http.ResponseWriter, req *http.Requ
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
 	json.NewEncoder(res).Encode(map[string]interface{}{
-		"message": "Grupo deletado coom sucesso.",
+		"message": "Grupo deletado com sucesso.",
 	})
 
 }
