@@ -185,3 +185,36 @@ func (c *GroupController) AddMemberToGroup(res http.ResponseWriter, req *http.Re
 	})
 
 }	
+
+
+// DELETE /grupos/{nome-do-grupo}/deletar
+
+func (c *GroupController) DeleteOneGroup(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	err := c.service.DeleteOneGroup(req.Context(), groupName, userId)
+
+	if errors.Is(err, ErrGroupNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+        return
+
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Grupo deletado coom sucesso.",
+	})
+
+}
