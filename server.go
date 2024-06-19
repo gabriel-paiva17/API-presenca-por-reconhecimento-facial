@@ -2,10 +2,8 @@ package main
 
 import (
 	"log"
-	"myproject/group"
-	"myproject/user"
+	"myproject/handler"
 	"myproject/utils"
-	"myproject/session"
 	"net/http"
 	"os"
 	"time"
@@ -47,21 +45,21 @@ func CreateServer() {
 
 	r := mux.NewRouter()
 
-	userRepo := user.NewUserRepository(client, dbName, "users")
-	groupRepo := group.NewGroupRepository(client, dbName, "groups")
-	sessionRepo := session.NewSessionRepository(client, dbName, "sessions")
+	userRepo := handler.NewUserRepository(client, dbName, "users")
+	groupRepo := handler.NewGroupRepository(client, dbName, "groups")
+	sessionRepo := handler.NewSessionRepository(client, dbName, "sessions")
 
-	userService := user.NewUserService(userRepo, secretKey)
-	groupService := group.NewGroupService(groupRepo, userRepo)
-	sessionService := session.NewSessionService(sessionRepo, groupRepo)
+	userService := handler.NewUserService(userRepo, secretKey)
+	groupService := handler.NewGroupService(groupRepo, userRepo)
+	sessionService := handler.NewSessionService(sessionRepo, groupRepo)
 
-	userController := user.NewUserController(userService)
-	groupController := group.NewGroupController(groupService)
-	sessionController := session.NewSessionController(sessionService)
+	userController := handler.NewUserController(userService)
+	groupController := handler.NewGroupController(groupService)
+	sessionController := handler.NewSessionController(sessionService)
 
-	r.HandleFunc("/auth/register", userController.CreateUserHandler).Methods("POST")
-	r.HandleFunc("/auth/login", userController.LoginUserHandler).Methods("POST")
-	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUserHandler)).Methods("POST")
+	r.HandleFunc("/auth/register", userController.CreateUser).Methods("POST")
+	r.HandleFunc("/auth/login", userController.LoginUser).Methods("POST")
+	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUser)).Methods("POST")
 
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroupHandler)).Methods("POST")

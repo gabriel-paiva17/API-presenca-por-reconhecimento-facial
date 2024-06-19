@@ -1,9 +1,8 @@
-package session
+package handler
 
 import (
 	"context"
 	"myproject/cv"
-	"myproject/group"
 	"time"
 
 	"github.com/google/uuid"
@@ -11,10 +10,10 @@ import (
 
 type SessionService struct {
 	sessionRepo *SessionRepository
-	groupRepo *group.GroupRepository
+	groupRepo *GroupRepository
 }
 
-func NewSessionService(sessionRepo *SessionRepository, groupRepo *group.GroupRepository) *SessionService {
+func NewSessionService(sessionRepo *SessionRepository, groupRepo *GroupRepository) *SessionService {
 	return &SessionService{sessionRepo: sessionRepo, groupRepo: groupRepo}
 }
 

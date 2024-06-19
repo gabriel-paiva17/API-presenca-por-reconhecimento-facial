@@ -1,4 +1,4 @@
-package session
+package handler
 
 import (
 	"errors"
@@ -68,7 +68,6 @@ type SessionByName struct {
 }
 
 var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")
-var ErrGroupNotFound = errors.New("grupo nao encontrado")
 var ErrSessionNotFound = errors.New("sessao nao encontrada")
 var ErrFaceDoesntMatch = errors.New("face enviada nao corresponde a de nenhum membro do grupo")
 var ErrSessionHasEnded = errors.New("sessao ja foi finalizada")

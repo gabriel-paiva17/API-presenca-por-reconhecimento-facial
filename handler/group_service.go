@@ -1,10 +1,8 @@
-package group
-
+package handler
 import (
 	"context"
 	"errors"
 	"myproject/cv"
-	"myproject/user"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,10 +10,10 @@ import (
 
 type GroupService struct {
 	groupRepo *GroupRepository
-	userRepo *user.UserRepository
+	userRepo *UserRepository
 }
 
-func NewGroupService(groupRepo *GroupRepository, userRepo *user.UserRepository) *GroupService {
+func NewGroupService(groupRepo *GroupRepository, userRepo *UserRepository) *GroupService {
 	return &GroupService{groupRepo:  groupRepo, userRepo: userRepo}
 }
 

@@ -1,4 +1,4 @@
-package user
+package handler
 
 import (
 	"encoding/json"
@@ -22,7 +22,7 @@ func NewUserController(service *UserService) *UserController {
 // POST /auth/register //
 /////////////////////////
 
-func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Request) {
+func (c *UserController) CreateUser(res http.ResponseWriter, req *http.Request) {
 
 	var createUserRequest CreateUserRequest
 	if err := json.NewDecoder(req.Body).Decode(&createUserRequest); err != nil {
@@ -85,7 +85,7 @@ func (c *UserController) CreateUserHandler(res http.ResponseWriter, req *http.Re
 // POST /auth/login //
 //////////////////////
 
-func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Request) {
+func (c *UserController) LoginUser(res http.ResponseWriter, req *http.Request) {
 
 	var loginReq LoginRequest
 	if err := json.NewDecoder(req.Body).Decode(&loginReq); err != nil {
@@ -121,7 +121,7 @@ func (c *UserController) LoginUserHandler(res http.ResponseWriter, req *http.Req
 // POST /auth/logout //
 ///////////////////////
 
-func (c *UserController) LogoutUserHandler(res http.ResponseWriter, req *http.Request) {
+func (c *UserController) LogoutUser(res http.ResponseWriter, req *http.Request) {
 
 	var response LogoutResponse
     response.Date = time.Now().Format(time.RFC3339)
