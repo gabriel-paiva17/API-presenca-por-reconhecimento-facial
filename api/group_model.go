@@ -22,7 +22,7 @@ type GroupByName struct {
 	Name string `json:"name"`
 }
 
-// POST /grupos
+// POST /grupos/criar
 
 type CreateGroupRequest struct {
 	Name      string `json:"name"`

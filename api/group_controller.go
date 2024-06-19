@@ -51,7 +51,7 @@ func (c *GroupController) GetAllGroupsByUserID(res http.ResponseWriter, req *htt
 	
 }
 
-// POST /grupos
+// POST /grupos/criar
 
 func (c *GroupController) CreateGroup(res http.ResponseWriter, req *http.Request) {
 
@@ -186,7 +186,6 @@ func (c *GroupController) AddMemberToGroup(res http.ResponseWriter, req *http.Re
 
 }	
 
-
 // DELETE /grupos/{nome-do-grupo}/deletar
 
 func (c *GroupController) DeleteOneGroup(res http.ResponseWriter, req *http.Request) {
@@ -215,6 +214,36 @@ func (c *GroupController) DeleteOneGroup(res http.ResponseWriter, req *http.Requ
 	res.WriteHeader(http.StatusOK)
 	json.NewEncoder(res).Encode(map[string]interface{}{
 		"message": "Grupo deletado com sucesso.",
+	})
+
+}
+
+// DELETE /grupos/deletar
+
+func (c *GroupController) DeleteAllGroupsFromUser(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	err := c.service.groupRepo.DeleteAllGroupsFromUser(req.Context(), userId)
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+
+	}
+
+	err = c.service.sessionRepo.DeleteAllSessionsFromUser(req.Context(), userId)
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Sessões e Grupos deletados com sucesso.",
 	})
 
 }

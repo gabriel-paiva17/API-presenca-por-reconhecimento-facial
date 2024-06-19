@@ -40,7 +40,7 @@ func (r *SessionRepository) FindOneSession(ctx context.Context, groupName string
 	return existingSession, true
 }
 
-func (r *GroupRepository) DeleteAllSessionsFromUser(ctx context.Context, createdBy string) error {
+func (r *SessionRepository) DeleteAllSessionsFromUser(ctx context.Context, createdBy string) error {
 
     filter := bson.M{"createdBy": createdBy}
 

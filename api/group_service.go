@@ -43,7 +43,7 @@ func (s *GroupService) GetGroups(userID string, ctx context.Context) ([]GroupByN
 
 }
 
-// POST /grupos
+// POST /grupos/criar
 
 func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest) (*Group, error) {
 
