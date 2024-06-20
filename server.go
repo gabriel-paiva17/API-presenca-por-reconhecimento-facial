@@ -65,8 +65,14 @@ func CreateServer() {
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroup)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/adicionar", utils.Authenticate(groupController.AddMemberToGroup)).Methods("POST")
+	
+	//documentar
 	r.HandleFunc("/grupos/{nome-do-grupo}/deletar", utils.Authenticate(groupController.DeleteOneGroup)).Methods("DELETE")
 	r.HandleFunc("/grupos/deletar", utils.Authenticate(groupController.DeleteAllGroupsFromUser)).Methods("DELETE")
+	
+	// documentar
+	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/{nome-do-membro}/deletar", utils.Authenticate(groupController.RemoveOneMemberFromGroup)).Methods("DELETE")
+	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes/deletar-membros", utils.Authenticate(groupController.RemoveAllMembersFromGroup)).Methods("DELETE")
 
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/iniciar", utils.Authenticate(sessionController.StartNewSession)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/validar-face", utils.Authenticate(sessionController.ValidateFace)).Methods("PUT")
@@ -74,7 +80,9 @@ func CreateServer() {
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/em-andamento", utils.Authenticate(sessionController.GetActiveSessions)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas", utils.Authenticate(sessionController.GetEndedSessions)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes", utils.Authenticate(sessionController.GetSessionDetails)).Methods("GET")
-	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/deletar", utils.Authenticate(sessionController.DeleteOneSession)).Methods("DELETE")
+	
+	// documentar
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/deletar", utils.Authenticate(sessionController.DeleteOneSession)).Methods("DELETE")	
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/em-andamento/deletar", utils.Authenticate(sessionController.DeleteAllActiveSessionsOfAGroup)).Methods("DELETE")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas/deletar", utils.Authenticate(sessionController.DeleteAllEndedSessionsOfAGroup)).Methods("DELETE")
 

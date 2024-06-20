@@ -247,3 +247,70 @@ func (c *GroupController) DeleteAllGroupsFromUser(res http.ResponseWriter, req *
 	})
 
 }
+
+// DELETE /grupos/{nome-do-grupo}/detalhes/{nome-do-membro}/deletar
+
+func (c *GroupController) RemoveOneMemberFromGroup(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+	memberName := vars["nome-do-membro"]
+
+
+	err := c.service.groupRepo.RemoveOneMemberFromGroup(req.Context(), groupName, userId, memberName)
+
+	if errors.Is(err, ErrGroupNotFound) || errors.Is(err, ErrMemberNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+        return
+
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Membro removido com sucesso.",
+	})
+
+}
+
+// DELETE /grupos/{nome-do-grupo}/detalhes/deletar-membros
+
+func (c *GroupController) RemoveAllMembersFromGroup(res http.ResponseWriter, req *http.Request) {
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+	groupName := vars["nome-do-grupo"]
+
+	err := c.service.groupRepo.RemoveAllMembersFromGroup(req.Context(), groupName, userId)
+
+	if errors.Is(err, ErrGroupNotFound)  {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+        return
+
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+        return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Membros removidos com sucesso.",
+	})
+}
+
