@@ -40,6 +40,44 @@ func (r *SessionRepository) FindOneSession(ctx context.Context, groupName string
 	return existingSession, true
 }
 
+func (r *SessionRepository) CalculateTotalAttendance(ctx context.Context, groupName string, userID string) (map[string]int, error) {
+	
+    filter := bson.M{
+        "groupName": groupName,
+        "createdBy": userID,
+    }
+
+	cursor, err := r.collection.Find(ctx, filter)
+    if err != nil {
+        return nil, err
+    }
+    defer cursor.Close(ctx)
+
+    totalAttendance := make(map[string]int)
+   
+    for cursor.Next(ctx) {
+    
+        var session Session
+        if err := cursor.Decode(&session); err != nil {
+            return nil, err
+        }
+        
+        for i := range session.Members {
+
+            totalAttendance[session.Members[i].Name] += session.Members[i].Attendance
+
+        }
+    
+    }
+
+    if err := cursor.Err(); err != nil {
+        return nil, err
+    }
+
+    return totalAttendance, nil
+}
+
+
 func (r *SessionRepository) DeleteAllSessionsFromUser(ctx context.Context, createdBy string) error {
 
     filter := bson.M{"createdBy": createdBy}
@@ -182,3 +220,4 @@ func (r *SessionRepository) DeleteAllEndedSessionsOfAGroup(ctx context.Context, 
     _, err := r.collection.DeleteMany(ctx, filter)
     return err
 }
+
