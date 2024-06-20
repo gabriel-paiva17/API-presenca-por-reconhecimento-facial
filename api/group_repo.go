@@ -135,3 +135,53 @@ func (r *GroupRepository) DeleteAllGroupsFromUser(ctx context.Context, createdBy
     _, err := r.collection.DeleteMany(ctx, filter)
     return err
 }
+
+// DELETE /grupos/{nome-do-grupo}/detalhes/{nome-do-membro}/deletar
+
+func (r *GroupRepository) RemoveOneMemberFromGroup(ctx context.Context, groupName, userID, memberName string) error {
+    group, found := r.FindOneByNameAndCreator(ctx, groupName, userID)
+    if !found {
+        return ErrGroupNotFound
+    }
+    
+	for i := range group.Members {
+       
+		if group.Members[i].Name == memberName {
+            
+			group.Members = append(group.Members[:i], group.Members[i+1:]...)
+			
+            return r.UpdateMembers(ctx, group, group.Members)
+      
+		}
+    }
+   
+	return ErrMemberNotFound
+}
+
+// DELETE /grupos/{nome-do-grupo}/detalhes/deletar-membros
+
+func (r *GroupRepository) RemoveAllMembersFromGroup(ctx context.Context, groupName, userID string) error {
+    group, found := r.FindOneByNameAndCreator(ctx, groupName, userID)
+    if !found {
+        return ErrGroupNotFound
+    }
+    
+	return r.UpdateMembers(ctx, group, []Member{})
+}
+
+func (r *GroupRepository) UpdateMembers(ctx context.Context, group *Group, newMembers []Member) error {
+
+	filter := bson.M{
+		"_id": group.ID,
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"members": newMembers,
+		},
+	}
+
+	_, err := r.collection.UpdateOne(ctx, filter, update)
+
+	return err
+}
