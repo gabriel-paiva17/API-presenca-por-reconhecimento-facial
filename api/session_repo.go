@@ -45,6 +45,7 @@ func (r *SessionRepository) CalculateTotalAttendance(ctx context.Context, groupN
     filter := bson.M{
         "groupName": groupName,
         "createdBy": userID,
+        "endedAt":   bson.M{"$ne": ""},
     }
 
 	cursor, err := r.collection.Find(ctx, filter)

@@ -12,6 +12,25 @@ type Group struct {
 	CreatedBy string          `json:"createdBy" bson:"createdBy"`
 }
 
+// GET /grupos/{nome-do-grupo}/detalhes
+
+type GetGroupDetailsResponse struct {
+
+	Name      string           `json:"name"`
+	CreatedAt string           `json:"createdAt"`
+	Members   []MemberResponse `json:"members"`
+}
+
+type MemberResponse struct {
+
+	Name       		string `json:"name"`
+	Face      		string `json:"face"`
+	AddedAt    		string `json:"addedAt"`
+	TotalAttendance int	   `json:"totalAttendance"`
+
+}
+
+
 // GET /grupos
 
 type GetAllGroupsResponse struct {

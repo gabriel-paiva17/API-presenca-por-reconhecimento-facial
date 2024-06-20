@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"errors"
 	"myproject/cv"
 	"time"
 
@@ -74,17 +73,49 @@ func (s *GroupService) CreateGroup(ctx context.Context, req *CreateGroupRequest)
 
 // GET /grupos/{nome-do-grupo}/detalhes
 
-func (s *GroupService) GetGroupByName(groupName, userId string, ctx context.Context) (*Group, error) {
+func (s *GroupService) GetGroupDetails(groupName, userId string, ctx context.Context) (*GetGroupDetailsResponse, error) {
 
 	group, ok := s.groupRepo.FindOneByNameAndCreator(ctx, groupName, userId)
 
 	if !ok {
 
-		return nil, errors.New("not found")
+		return nil, ErrGroupNotFound
 
 	}
 
-	return group, nil
+	totalAttendance, err := s.sessionRepo.CalculateTotalAttendance(ctx, groupName, userId)
+
+	if err != nil {
+
+		return nil , err
+
+	}
+
+	responseMembers := []MemberResponse{}
+	
+	for i := range group.Members {
+
+		mr := MemberResponse{
+
+			Name: group.Members[i].Name,
+			Face: group.Members[i].Face,
+			AddedAt: group.Members[i].AddedAt,
+			TotalAttendance: totalAttendance[group.Members[i].Name],
+
+		}		
+
+		responseMembers = append(responseMembers, mr)
+
+	}
+
+	response := &GetGroupDetailsResponse {
+
+		Name: group.Name,
+		CreatedAt: group.CreatedAt,
+		Members: responseMembers,
+	}
+
+	return response, nil
 
 }
 

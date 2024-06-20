@@ -112,15 +112,23 @@ func (c *GroupController) GetGroupDetails(res http.ResponseWriter, req *http.Req
 	vars := mux.Vars(req)
 	groupName := vars["nome-do-grupo"]
 
-	group, err := c.service.GetGroupByName(groupName, userId, req.Context())
-	if err != nil {
-		utils.WriteErrorResponse(res, http.StatusNotFound, "Grupo do usuário não foi encontrado.")
+	response, err := c.service.GetGroupDetails(groupName, userId, req.Context())
+	
+	if errors.Is(err, ErrGroupNotFound) {
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
 		return
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
 	}
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
-	json.NewEncoder(res).Encode(group)
+	json.NewEncoder(res).Encode(response)
 	
 }
 
