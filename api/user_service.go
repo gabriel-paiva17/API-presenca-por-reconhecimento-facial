@@ -12,13 +12,17 @@ import (
 )
 
 type UserService struct {
-	repo   *UserRepository
-	jwtKey []byte
+	userRepo    *UserRepository
+	groupRepo   *GroupRepository
+	sessionRepo *SessionRepository
+	jwtKey      []byte
 }
 
-func NewUserService(repo *UserRepository, jwtKey string) *UserService {
+func NewUserService(userRepo *UserRepository, groupRepo *GroupRepository, sessionRepo *SessionRepository, jwtKey string) *UserService {
 	return &UserService{
-		repo:   repo,
+		userRepo:    userRepo,
+		groupRepo:   groupRepo,
+		sessionRepo: sessionRepo,
 		jwtKey: []byte(jwtKey),
 	}
 }
@@ -37,7 +41,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 		RegisteredAt: time.Now().Format(time.RFC3339),
 	}
 
-	if err := s.repo.CreateUser(ctx, newUser); err != nil {
+	if err := s.userRepo.CreateUser(ctx, newUser); err != nil {
 		return nil, err
 	}
 
@@ -58,7 +62,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *CreateUserRequest) (*
 
 func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest, res http.ResponseWriter) error {
 
-	dbUser, found := s.repo.FindOneByEmail(ctx, req.Email)
+	dbUser, found := s.userRepo.FindOneByEmail(ctx, req.Email)
 
 	if !found {
 		return fmt.Errorf("usuario nao existe")
@@ -95,3 +99,27 @@ func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest, res http
 	return nil
 
 }
+
+func (s *UserService) DeleteUser(ctx context.Context, userId string) error {
+
+	err := s.userRepo.DeleteUser(ctx, userId)
+
+	if err != nil {
+
+		return err
+
+	}
+	
+	err = s.groupRepo.DeleteAllGroupsFromUser(ctx, userId)
+
+	if err != nil {
+
+		return err
+
+	}
+
+	err = s.sessionRepo.DeleteAllSessionsFromUser(ctx, userId)
+
+	return err
+
+} 
