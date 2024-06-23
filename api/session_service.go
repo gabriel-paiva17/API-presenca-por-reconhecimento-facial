@@ -156,7 +156,7 @@ func (s *SessionService) EndSession(ctx context.Context, req *EndSessionRequest)
 
 }
 
-// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/deletar
 
 func (s *SessionService) DeleteOneSession(ctx context.Context, groupName, createdBy, sessionName string) error {
     _, found := s.sessionRepo.FindOneSession(ctx, groupName, createdBy, sessionName)

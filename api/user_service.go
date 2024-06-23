@@ -100,6 +100,8 @@ func (s *UserService) LoginUser(ctx context.Context, req *LoginRequest, res http
 
 }
 
+// DELETE /auth/delete
+
 func (s *UserService) DeleteUser(ctx context.Context, userId string) error {
 
 	err := s.userRepo.DeleteUser(ctx, userId)

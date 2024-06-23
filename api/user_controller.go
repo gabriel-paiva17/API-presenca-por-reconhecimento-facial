@@ -143,3 +143,35 @@ func (c *UserController) LogoutUser(res http.ResponseWriter, req *http.Request) 
     json.NewEncoder(res).Encode(response)
 
 }
+
+// DELETE /auth/delete
+
+func (c *UserController) DeleteUser(res http.ResponseWriter, req *http.Request) {
+
+	userId, _ := utils.GetAuthenticatedUserId(req)
+
+	err := c.service.DeleteUser(req.Context(), userId)
+
+	if err == ErrUserNotFound {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+		return
+
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+
+	res.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Usuário deletado com sucesso.",
+	})
+
+}

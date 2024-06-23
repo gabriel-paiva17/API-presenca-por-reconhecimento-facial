@@ -60,7 +60,8 @@ func CreateServer() {
 	r.HandleFunc("/auth/register", userController.CreateUser).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUser).Methods("POST")
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUser)).Methods("POST")
-
+	r.HandleFunc("/auth/delete", utils.Authenticate(userController.DeleteUser)).Methods("DELETE")
+	
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroup)).Methods("POST")
 	r.HandleFunc("/grupos/{nome-do-grupo}/detalhes", utils.Authenticate(groupController.GetGroupDetails)).Methods("GET")
