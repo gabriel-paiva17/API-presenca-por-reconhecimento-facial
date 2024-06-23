@@ -166,6 +166,17 @@ func (c *UserController) DeleteUser(res http.ResponseWriter, req *http.Request) 
 
 	}
 
+	// Clear the authentication cookie
+    cookie := &http.Cookie{
+        Name:     "auth-token",
+        Value:    "",
+        Path: 	  "/",
+		Expires:  time.Unix(0, 0),
+        HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+    }
+    http.SetCookie(res, cookie)
+
 	res.Header().Set("Content-Type", "application/json")
 
 	res.WriteHeader(http.StatusOK)
