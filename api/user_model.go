@@ -55,3 +55,4 @@ type LogoutResponse struct {
 
 var ErrEmailAlreadyExists = errors.New("email already used")
 var ErrGeneratingToken = errors.New("cannot generate token")
+var ErrUserNotFound = errors.New("user not found")

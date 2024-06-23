@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -72,4 +71,23 @@ func (r *UserRepository) CreateUser(ctx context.Context, user *User) error {
 
 	return err
 
+}
+
+// DELETE /auth/delete
+
+func (r *UserRepository) DeleteUser(ctx context.Context, userId string) error {
+
+	_, found := r.FindOneByID(ctx, userId)
+
+	if !found {
+
+		return ErrUserNotFound
+
+	}
+
+    filter := bson.M{"_id": userId}
+
+    _, err := r.collection.DeleteOne(ctx, filter)
+
+    return err
 }
