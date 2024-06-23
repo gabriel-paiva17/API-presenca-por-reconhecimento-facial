@@ -100,7 +100,7 @@ func (s *GroupService) GetGroupDetails(groupName, userId string, ctx context.Con
 			Name: group.Members[i].Name,
 			Face: group.Members[i].Face,
 			AddedAt: group.Members[i].AddedAt,
-			TotalAttendance: totalAttendance[group.Members[i].Name],
+			TotalAttendance: totalAttendance[group.Members[i].ID],
 
 		}		
 

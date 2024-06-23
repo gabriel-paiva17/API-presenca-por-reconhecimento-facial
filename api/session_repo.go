@@ -65,7 +65,7 @@ func (r *SessionRepository) CalculateTotalAttendance(ctx context.Context, groupN
         
         for i := range session.Members {
 
-            totalAttendance[session.Members[i].Name] += session.Members[i].Attendance
+            totalAttendance[session.Members[i].ID] += session.Members[i].Attendance
 
         }
     
