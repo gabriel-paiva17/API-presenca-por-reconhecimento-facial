@@ -176,6 +176,12 @@ func (s *SessionService) UpdateMemberAttendance(ctx context.Context, groupName, 
     if !found {
         return ErrSessionNotFound
     }
+
+	if session.EndedAt == "" {
+
+        return ErrSessionIsActive
+
+	}
   
 	for i := range session.Members {
 

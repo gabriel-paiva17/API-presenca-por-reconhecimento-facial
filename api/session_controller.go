@@ -352,3 +352,61 @@ func (c *SessionController) DeleteAllEndedSessionsOfAGroup(res http.ResponseWrit
 		"message": "Sessões encerradas deletadas",
 	})
 }
+
+// PATCH /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes/{nome-do-membro}/editar-presenca
+
+func (c *SessionController) UpdateMemberAttendance(res http.ResponseWriter, req *http.Request) {
+
+	var updateMemberAttendanceRequest UpdateMemberAttendanceRequest
+	if err := json.NewDecoder(req.Body).Decode(&updateMemberAttendanceRequest); err != nil {
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Request Body Invalido")
+		return
+	}
+
+
+	if updateMemberAttendanceRequest.Attendance < 0 {
+
+		utils.WriteErrorResponse(res, http.StatusBadRequest, "Valor de presença não pode ser negativo.")
+		return
+
+	}
+
+    userId, _ := utils.GetAuthenticatedUserId(req)
+
+	vars := mux.Vars(req)
+
+	groupName := vars["nome-do-grupo"]
+	sessionName := vars["nome-da-sessao"]
+	
+	updateMemberAttendanceRequest.Name = vars["nome-do-membro"]
+
+	err := c.service.UpdateMemberAttendance(req.Context(), groupName, userId, sessionName, &updateMemberAttendanceRequest)
+
+    if errors.Is(err, ErrSessionNotFound) || errors.Is(err, ErrMemberNotFound) {
+
+		utils.WriteErrorResponse(res, http.StatusNotFound, err.Error())
+		return
+
+	}
+
+	if errors.Is(err, ErrSessionIsActive) {
+ 
+		utils.WriteErrorResponse(res, http.StatusConflict, err.Error())
+		return
+
+	}
+
+	if err != nil {
+
+		utils.WriteErrorResponse(res, http.StatusInternalServerError, err.Error())
+		return
+
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(map[string]interface{}{
+		"message": "Membro atualizado.",
+	})
+
+}

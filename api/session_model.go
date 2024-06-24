@@ -78,3 +78,4 @@ var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em and
 var ErrSessionNotFound = errors.New("sessao nao encontrada")
 var ErrFaceDoesntMatch = errors.New("face enviada nao corresponde a de nenhum membro do grupo")
 var ErrSessionHasEnded = errors.New("sessao ja foi finalizada")
+var ErrSessionIsActive = errors.New("sessao esta em andamento")
