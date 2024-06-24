@@ -62,6 +62,8 @@ func (r *SessionRepository) CalculateTotalAttendance(ctx context.Context, groupN
         if err := cursor.Decode(&session); err != nil {
             return nil, err
         }
+
+        totalAttendance["max"] += session.MaxAttendance
         
         for i := range session.Members {
 

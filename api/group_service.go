@@ -112,6 +112,7 @@ func (s *GroupService) GetGroupDetails(groupName, userId string, ctx context.Con
 
 		Name: group.Name,
 		CreatedAt: group.CreatedAt,
+		MaxTotalAttendance: totalAttendance["max"],
 		Members: responseMembers,
 	}
 

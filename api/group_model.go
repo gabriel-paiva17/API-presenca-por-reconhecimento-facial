@@ -16,9 +16,10 @@ type Group struct {
 
 type GetGroupDetailsResponse struct {
 
-	Name      string           `json:"name"`
-	CreatedAt string           `json:"createdAt"`
-	Members   []MemberResponse `json:"members"`
+	Name    		   string           `json:"name"`
+	CreatedAt 		   string           `json:"createdAt"`
+	MaxTotalAttendance int              `json:"maxTotalAttendance"`
+	Members   		   []MemberResponse `json:"members"`
 }
 
 type MemberResponse struct {
