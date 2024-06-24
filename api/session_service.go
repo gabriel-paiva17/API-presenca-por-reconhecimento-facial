@@ -167,3 +167,27 @@ func (s *SessionService) DeleteOneSession(ctx context.Context, groupName, create
 	return 	s.sessionRepo.DeleteOneSession(ctx, groupName, createdBy, sessionName)
 
 }
+
+// PATCH /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes/{nome-do-membro}/editar-presenca
+
+func (s *SessionService) UpdateMemberAttendance(ctx context.Context, groupName, createdBy, sessionName string, updateMember *UpdateMemberAttendanceRequest) error {
+
+	session, found := s.sessionRepo.FindOneSession(ctx, groupName, createdBy, sessionName)
+    if !found {
+        return ErrSessionNotFound
+    }
+  
+	for i := range session.Members {
+
+		if session.Members[i].Name == updateMember.Name {
+
+			session.Members[i].Attendance = updateMember.Attendance
+			return s.sessionRepo.UpdateMembers(ctx, session, session.Members)
+
+		}
+
+	}
+
+	return ErrMemberNotFound
+
+}

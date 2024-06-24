@@ -67,6 +67,13 @@ type SessionByName struct {
 	Name string `json:"name"`
 }
 
+type UpdateMemberAttendanceRequest struct {
+
+	Name 	   string `json:"name"`
+	Attendance int    `json:"attendance"`
+
+}
+
 var ErrSessionAlreadyExists = errors.New("essa sessao ja existe, ou está em andamento")
 var ErrSessionNotFound = errors.New("sessao nao encontrada")
 var ErrFaceDoesntMatch = errors.New("face enviada nao corresponde a de nenhum membro do grupo")
