@@ -366,7 +366,7 @@ func (c *SessionController) UpdateMemberAttendance(res http.ResponseWriter, req 
 
 	if updateMemberAttendanceRequest.Attendance < 0 {
 
-		utils.WriteErrorResponse(res, http.StatusBadRequest, "Valor de presença não pode ser negativo.")
+		utils.WriteErrorResponse(res, http.StatusUnprocessableEntity, "Valor de presença não pode ser negativo.")
 		return
 
 	}
@@ -392,6 +392,13 @@ func (c *SessionController) UpdateMemberAttendance(res http.ResponseWriter, req 
 	if errors.Is(err, ErrSessionIsActive) {
  
 		utils.WriteErrorResponse(res, http.StatusConflict, err.Error())
+		return
+
+	}
+
+	if errors.Is(err, ErrMaxAttendanceExceeded) {
+
+		utils.WriteErrorResponse(res, http.StatusUnprocessableEntity, err.Error())
 		return
 
 	}

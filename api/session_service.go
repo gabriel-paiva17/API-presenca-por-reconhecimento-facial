@@ -182,6 +182,14 @@ func (s *SessionService) UpdateMemberAttendance(ctx context.Context, groupName, 
         return ErrSessionIsActive
 
 	}
+
+	if updateMember.Attendance > session.MaxAttendance {
+
+   
+		return ErrMaxAttendanceExceeded
+
+
+	}
   
 	for i := range session.Members {
 
