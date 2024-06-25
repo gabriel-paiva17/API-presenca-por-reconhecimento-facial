@@ -279,7 +279,7 @@ func (c *SessionController) GetSessionDetails(res http.ResponseWriter, req *http
 
 }
 
-// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}
+// DELETE /grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/deletar
 
 func (c *SessionController) DeleteOneSession(res http.ResponseWriter, req *http.Request) {
    
@@ -311,7 +311,7 @@ func (c *SessionController) DeleteOneSession(res http.ResponseWriter, req *http.
 	})
 }
 
-// DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento
+// DELETE /grupos/{nome-do-grupo}/sessoes/em-andamento/deletar-todas
 
 func (c *SessionController) DeleteAllActiveSessionsOfAGroup(res http.ResponseWriter, req *http.Request) {
     userId, _ := utils.GetAuthenticatedUserId(req)
@@ -332,7 +332,7 @@ func (c *SessionController) DeleteAllActiveSessionsOfAGroup(res http.ResponseWri
 	})
 }
 
-// DELETE /grupos/{nome-do-grupo}/sessoes/encerradas
+// DELETE /grupos/{nome-do-grupo}/sessoes/encerradas/deletar-todas
 
 func (c *SessionController) DeleteAllEndedSessionsOfAGroup(res http.ResponseWriter, req *http.Request) {
     userId, _ := utils.GetAuthenticatedUserId(req)

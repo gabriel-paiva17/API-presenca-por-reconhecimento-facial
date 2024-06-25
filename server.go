@@ -60,7 +60,7 @@ func CreateServer() {
 	r.HandleFunc("/auth/register", userController.CreateUser).Methods("POST")
 	r.HandleFunc("/auth/login", userController.LoginUser).Methods("POST")
 	r.HandleFunc("/auth/logout", utils.Authenticate(userController.LogoutUser)).Methods("POST")
-	r.HandleFunc("/auth/delete", utils.Authenticate(userController.DeleteUser)).Methods("DELETE")
+	r.HandleFunc("/auth/delete", utils.Authenticate(userController.DeleteUser)).Methods("DELETE")  // frontend misising
 	
 	r.HandleFunc("/grupos", utils.Authenticate(groupController.GetAllGroupsByUserID)).Methods("GET")
 	r.HandleFunc("/grupos/criar", utils.Authenticate(groupController.CreateGroup)).Methods("POST")
@@ -78,8 +78,10 @@ func CreateServer() {
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas", utils.Authenticate(sessionController.GetEndedSessions)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes", utils.Authenticate(sessionController.GetSessionDetails)).Methods("GET")
 	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/deletar", utils.Authenticate(sessionController.DeleteOneSession)).Methods("DELETE")	
-	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/em-andamento/deletar", utils.Authenticate(sessionController.DeleteAllActiveSessionsOfAGroup)).Methods("DELETE")
-	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas/deletar", utils.Authenticate(sessionController.DeleteAllEndedSessionsOfAGroup)).Methods("DELETE")
+	
+	// frontend missing
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/em-andamento/deletar-todas", utils.Authenticate(sessionController.DeleteAllActiveSessionsOfAGroup)).Methods("DELETE")
+	r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/encerradas/deletar-todas", utils.Authenticate(sessionController.DeleteAllEndedSessionsOfAGroup)).Methods("DELETE")
     r.HandleFunc("/grupos/{nome-do-grupo}/sessoes/{nome-da-sessao}/detalhes/{nome-do-membro}/editar-presenca", utils.Authenticate(sessionController.UpdateMemberAttendance)).Methods("PATCH")
 
 	// configurando server e CORS
