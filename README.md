@@ -1,5 +1,9 @@
 https://documenter.getpostman.com/view/34092137/2sA3QngYxU
 
+# PARA ALTERAR A SENSIBILIDADE DE COMPARAÇÃO DE FACES
+
+- A sensibilidade está hard coded, então caso você queira alterar a sensibilidade, acesse a pasta cv,
+acesse cvFunctions.go, e altera a constante threshold na função CompareFaces.
 
 # USUARIO:
 
