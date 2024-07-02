@@ -1,3 +1,5 @@
+# ACESSO A TODA DOCUMENTAÇÃO DA API
+
 https://documenter.getpostman.com/view/34092137/2sA3QngYxU
 
 # PARA ALTERAR A SENSIBILIDADE DE COMPARAÇÃO DE FACES
