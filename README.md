@@ -1,6 +1,6 @@
 # BACKLOG
 
-Refatorar banco de dados: relacionamento Grupo-Sessão é (n, n), portanto deve ser criado uma entidade para o relacionamento
+Refatorar banco de dados
 
 # ACESSO A TODA DOCUMENTAÇÃO DA API
 
