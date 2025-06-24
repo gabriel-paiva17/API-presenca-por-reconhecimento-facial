@@ -1,3 +1,7 @@
+# BACKLOG
+
+Refatorar banco de dados: relacionamento Grupo-Sessão é (n, n), portanto deve ser criado uma entidade para o relacionamento
+
 # ACESSO A TODA DOCUMENTAÇÃO DA API
 
 https://documenter.getpostman.com/view/34092137/2sA3QngYxU
